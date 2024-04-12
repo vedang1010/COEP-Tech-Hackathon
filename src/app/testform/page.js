@@ -60,8 +60,25 @@ function ActForm() {
 
         var idd = date+start_time+end_time;
         const database = getDatabase(app); 
-      
+        const rootRef = ref(database, "Clubs");
+        var club=""
+        onValue(rootRef, (snapshot) => {
+          const request = snapshot.val();
+          const newData = [];
+          for (const userId in request) {
+            const userData = request[userId];
+            // console.log(userData)
+            if (userData.email === user.email) {
+              console.log(userData.name)
+              club=userData.name;
+
+              newData.push(userData);
+            }
+          }
+          // setListData(newData);
+        });
             const reference = ref(database, "Requests");
+           
             // console.log(reference);
             const reference2 = ref(database, "Requests/" + idd);
 
@@ -79,7 +96,9 @@ function ActForm() {
                 status:'pending',
                 Facultystatus:'pending',
                 facRemark:'',
-                inchargeRemark:''
+                inchargeRemark:'',
+                club:club,
+                id:idd
 
 
             });
