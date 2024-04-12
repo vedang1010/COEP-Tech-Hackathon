@@ -1,105 +1,141 @@
-"use client"
-import React from 'react'
-import { useEffect, useState } from 'react';
-import { styled } from "styled-components"
-import app from "../config/config"
-import { ref, set, getDatabase, onValue } from 'firebase/database';
+"use client";
+import React from "react";
+import { useEffect, useState } from "react";
+import { styled } from "styled-components";
+import { app } from "../config/config";
+import { ref, set, getDatabase, onValue } from "firebase/database";
 
 function ActForm() {
-    const [date, setdate] = useState('');
-    const [start_time,setstart_time] = useState('');
-    const [end_time, setend_time] = useState('');
-    const [title, settitle] = useState('');
-    const [reason, setreason] = useState('');
-    const [venue, setvenue] = useState('');
-    const [audience, setaudience] = useState('');
-    const [requirements, setrequirements] = useState('');
+  const [date, setdate] = useState("");
+  const [start_time, setstart_time] = useState("");
+  const [end_time, setend_time] = useState("");
+  const [title, settitle] = useState("");
+  const [reason, setreason] = useState("");
+  const [venue, setvenue] = useState("");
+  const [audience, setaudience] = useState("");
+  const [requirements, setrequirements] = useState("");
 
-    const handle_req_submit = () => {
-        try {
-        console.log(date);
-        console.log(start_time);
+  const createChannel = (
+    clubEmail,
+    facultyAdvisorEmail,
+    venueInchargeEmail
+) => {
+    try {
+        const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+        const database = getDatabase(app);
+        console.log("gugiui Channels/" + channelKey);
+        const channelRef = ref(database, "Channels/" + channelKey);
+        console.log("Channel ref:", channelRef);
+        console.log("Channel key:", channelKey);
 
-        var idd = date+start_time+end_time;
-        const database = getDatabase(app); 
+        set(channelRef, {
+            clubEmail,
+            facultyAdvisorEmail,
+            venueInchargeEmail,
+            members: {
+              [facultyAdvisorEmail]: true, // Set faculty advisor as a member
+              [venueInchargeEmail]: true, // Set venue incharge as a member
+          },
+        }).then(() => {
+            console.log('Channel created successfully.');
+        }).catch((error) => {
+            console.error('Error creating channel:', error);
+        });
+    } catch (error) {
+        console.error('Error creating channel:', error);
+    }
+};
+
+
+  const handle_req_submit = () => {
+    try {
+      const clubEmail = "example@example.com";
+      const facultyAdvisorEmail = "advisor@example.com";
+      const venueInchargeEmail = "incharge@example.com";
+
+      console.log(date);
+      console.log(start_time);
+
       
-            const reference = ref(database, "Requests");
-            // console.log(reference);
-            const reference2 = ref(database, "Requests/" + idd);
+      var idd = date + start_time + end_time;
+      const database = getDatabase(app);
 
-            console.log(reference2);
+      const reference = ref(database, "Requests");
+      // console.log(reference);
+      const reference2 = ref(database, "Requests/" + idd);
 
-            set(reference2, {
-                date: date,
-                start_time:start_time,
-                end_time: end_time,
-                title:title,
-                reason:reason,
-                venue:venue,
-                audience:audience,
-                requirements:requirements
-            });
+      console.log(reference2);
 
+      set(reference2, {
+        date: date,
+        start_time: start_time,
+        end_time: end_time,
+        title: title,
+        reason: reason,
+        venue: venue,
+        audience: audience,
+        requirements: requirements,
+      });
 
-        }
-        catch (e) {
-            console.error(e);
-          }
+      console.log("Creating channel now")
+      createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
 
-
-    };
-    return (
-        <Container>
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return (
+    <Container>
       <FormContainer>
         <Title>Meeting Form</Title>
-          <FormGroup>
-            <Label>Date:</Label>
-            <Input
-              type="date"
-              value={date}
-              onChange={(e) => setdate(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Start Time:</Label>
-            <Input
-              type="time"
-              value={start_time}
-              onChange={(e) => setstart_time(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>End Time:</Label>
-            <Input
-              type="time"
-              value={end_time}
-              onChange={(e) => setend_time(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Title:</Label>
-            <Input
-              type="text"
-              value={title}
-              onChange={(e) => settitle(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Reason:</Label>
-            <Input
-              type="text"
-              value={reason}
-              onChange={(e) => setreason(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Venue:</Label>
-            <Select
+        <FormGroup>
+          <Label>Date:</Label>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setdate(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Start Time:</Label>
+          <Input
+            type="time"
+            value={start_time}
+            onChange={(e) => setstart_time(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>End Time:</Label>
+          <Input
+            type="time"
+            value={end_time}
+            onChange={(e) => setend_time(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Title:</Label>
+          <Input
+            type="text"
+            value={title}
+            onChange={(e) => settitle(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Reason:</Label>
+          <Input
+            type="text"
+            value={reason}
+            onChange={(e) => setreason(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Venue:</Label>
+          <Select
             value={venue}
             onChange={(e) => setvenue(e.target.value)}
             required
@@ -111,10 +147,10 @@ function ActForm() {
             <option value="Hostel Ground">Hostel Ground</option>
             {/* Add more options as needed */}
           </Select>
-          </FormGroup>
-          <FormGroup>
-            <Label>Audience:</Label>
-            <Select
+        </FormGroup>
+        <FormGroup>
+          <Label>Audience:</Label>
+          <Select
             value={venue}
             onChange={(e) => setaudience(e.target.value)}
             required
@@ -122,28 +158,31 @@ function ActForm() {
             <option value="">Select Audience</option>
             <option value="College students">College students</option>
             <option value="Outside college">Outside college</option>
-            <option value="Both college and outsiders">Both college and outsiders</option>
+            <option value="Both college and outsiders">
+              Both college and outsiders
+            </option>
             {/* Add more options as needed */}
           </Select>
-          </FormGroup>
-          <FormGroup>
-            <Label>Requirements:</Label>
-            <TextArea
+        </FormGroup>
+        <FormGroup>
+          <Label>Requirements:</Label>
+          <TextArea
             //   name="requirements"
-              rows="4"
-              value={requirements}
-              onChange={(e) => setrequirements(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <Button onClick={handle_req_submit}type="submit">Submit</Button>
+            rows="4"
+            value={requirements}
+            onChange={(e) => setrequirements(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <Button onClick={handle_req_submit} type="submit">
+          Submit
+        </Button>
       </FormContainer>
     </Container>
-    );
-  }
+  );
+}
 
-
-  const Container = styled.div`
+const Container = styled.div`
   min-height: 100vh;
   /* min-width: 150vw; */
   display: flex;
@@ -152,7 +191,7 @@ function ActForm() {
   background-color: #1a202c;
 `;
 
-  const FormContainer = styled.div`
+const FormContainer = styled.div`
   max-width: 500px;
   min-width: 500px;
   /* display: flex;
@@ -269,4 +308,4 @@ const Select = styled.select`
 //     color: black;
 // `
 
-export default ActForm
+export default ActForm;
