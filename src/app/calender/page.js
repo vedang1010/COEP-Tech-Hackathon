@@ -1,9 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-
-import React, { useEffect, useState } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import app from "../config/config"
