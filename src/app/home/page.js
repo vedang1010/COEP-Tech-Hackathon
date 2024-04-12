@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from "firebase/app";
 import Layout from '../../../components/Layout'
+import Form from '../../../components/Form/page'
 import ActForm from '../testform/page';
 import { getDatabase, ref, onValue } from "firebase/database";
+import Remarks from '../remark/remark';
 
 const home = () => {
 // TODO: Add SDKs for Firebase products that you want to use
@@ -21,35 +23,36 @@ const firebaseConfig = {
   databaseURL: "https://venue-booking-c0bba-default-rtdb.firebaseio.com/"
 };
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+// const app = initializeApp(firebaseConfig);
+// const database = getDatabase(app);
 
 
-useEffect(() => {
-  console.log("hello")
-  // console.log(database)
-  const rootRef = ref(database, "Venue");
-  onValue(rootRef, (snapshot) => {
-    const venue = snapshot.val();
-    // console.log(venue)
-    // const updatedWebsites = [];
+// useEffect(() => {
+//   console.log("hello")
+//   // console.log(database)
+//   const rootRef = ref(database, "Venue");
+//   onValue(rootRef, (snapshot) => {
+//     const venue = snapshot.val();
+//     // console.log(venue)
+//     // const updatedWebsites = [];
 
-    for (const userId in venue) {
-      const userData = venue[userId];
-      console.log(userData.id1)
-    }
+//     for (const userId in venue) {
+//       const userData = venue[userId];
+//       console.log(userData.id1)
+//     }
 
-    // setWebsites(updatedWebsites);
-  });
+//     // setWebsites(updatedWebsites);
+//   });
 
-}, [database]);
+// }, [database]);
 
   return (
     // <>
     <Layout>
     {true? <ActForm></ActForm>:<>cdbjh</>}
-    
+    <Remarks />
     </Layout>
+    
     // {/* </> */}
   )
 }
