@@ -169,12 +169,11 @@ const CalendarGfg = () => {
                 <p>Event Name: {item.title}</p>
                 <p>Event Start Time: {item.start_time}</p>
                 <p>Event End Time: {item.end_time}</p>
-                <p>Event Club: {item.end_time}</p>
+                <p>Event Club: {item.club}</p>
                 {/* Add more properties as needed */}
               </ListItem>
             ))}
           </ListContainer>
-
         )}
       </CalendarContainer>
     </>

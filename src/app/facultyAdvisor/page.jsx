@@ -13,9 +13,9 @@ const TabContainer = styled.div`
 const TabButton = styled.button`
   padding: 15px 25px;
   margin: 20px 10px;
-  background-color: ${props => props.active ? '#023e8a' : 'transparent'};
+  background-color: ${props => props.active ? '#3285A6' : 'rgba(50, 133, 166, 0.5)'};
   color: ${props => props.active ? 'white' : 'white'};
-  border: 1px solid blue;
+  border: 1px solid #3285A6;
   border-radius: 5px;
   cursor: pointer;
   font-size:20px;
