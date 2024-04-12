@@ -16,38 +16,56 @@ function ActForm() {
     const [venue, setvenue] = useState('');
     const [audience, setaudience] = useState('');
     const [requirements, setrequirements] = useState('');
-    const auth = getAuth();
-    const [user] = useAuthState(auth);
+    const createChannel = (
+      clubEmail,
+      facultyAdvisorEmail,
+      venueInchargeEmail
+    ) => {
+      try {
+        console.log("Creating channel now inside enters");
+        console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
+        const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+        const channelKey = temp.replace(/[.@_]/g, '');
+        console.log("new keyyyy "+ channelKey)
+        // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+        const database = getDatabase(app);
+        console.log("kahskfj Channels/" + channelKey);
+        const channelRef = ref(database, `Channels/${channelKey}`);
+        console.log("Channel ref:", channelRef);
+        console.log("Channel key:", channelKey);
+  
+        set(channelRef, {
+          clubEmail,
+          facultyAdvisorEmail,
+          venueInchargeEmail,
+          // members: {
+          //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
+          //   [venueInchargeEmail]: true, // Set venue incharge as a member
+          // },
+        })
+          .then(() => {
+            console.log("Channel created successfully.");
+          })
+          .catch((error) => {
+            console.error("Error creating channel:", error);
+          });
+      } catch (error) {
+        console.error("Error creating channel:", error);
+      }
+    };
     const handle_req_submit = () => {
         try {
-        // console.log(date);
-        // console.log(start_time);
- 
+        console.log(date);
+        console.log(start_time);
+
         var idd = date+start_time+end_time;
         const database = getDatabase(app); 
-        const rootRef = ref(database, "Clubs");
-        var club=""
-        onValue(rootRef, (snapshot) => {
-          const request = snapshot.val();
-          const newData = [];
-          for (const userId in request) {
-            const userData = request[userId];
-            // console.log(userData)
-            if (userData.email === user.email) {
-              console.log(userData.name)
-              club=userData.name;
-
-              newData.push(userData);
-            }
-          }
-          // setListData(newData);
-        });
-
+      
             const reference = ref(database, "Requests");
             // console.log(reference);
             const reference2 = ref(database, "Requests/" + idd);
 
-            console.log(reference2);
+      console.log(reference2);
 
             set(reference2, {
                 date: date,
@@ -58,72 +76,67 @@ function ActForm() {
                 venue:venue,
                 audience:audience,
                 requirements:requirements,
-                Facultystatus:'pending',
-                status:'pending',
-                club:club,
-                id:idd
+                status:'pending'
             });
 
-
-        }
-        catch (e) {
-            console.error(e);
-          }
-
-
-    };
-    return (
-        <Container>
+      console.log("Creating channel now entering");
+      createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return (
+    <Container>
       <FormContainer>
         <Title>Meeting Form</Title>
-          <FormGroup>
-            <Label>Date:</Label>
-            <Input
-              type="date"
-              value={date}
-              onChange={(e) => setdate(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Start Time:</Label>
-            <Input
-              type="time"
-              value={start_time}
-              onChange={(e) => setstart_time(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>End Time:</Label>
-            <Input
-              type="time"
-              value={end_time}
-              onChange={(e) => setend_time(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Title:</Label>
-            <Input
-              type="text"
-              value={title}
-              onChange={(e) => settitle(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Reason:</Label>
-            <Input
-              type="text"
-              value={reason}
-              onChange={(e) => setreason(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Venue:</Label>
-            <Select
+        <FormGroup>
+          <Label>Date:</Label>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setdate(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Start Time:</Label>
+          <Input
+            type="time"
+            value={start_time}
+            onChange={(e) => setstart_time(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>End Time:</Label>
+          <Input
+            type="time"
+            value={end_time}
+            onChange={(e) => setend_time(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Title:</Label>
+          <Input
+            type="text"
+            value={title}
+            onChange={(e) => settitle(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Reason:</Label>
+          <Input
+            type="text"
+            value={reason}
+            onChange={(e) => setreason(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Venue:</Label>
+          <Select
             value={venue}
             onChange={(e) => setvenue(e.target.value)}
             required
@@ -135,48 +148,53 @@ function ActForm() {
             <option value="Hostel Ground">Hostel Ground</option>
             {/* Add more options as needed */}
           </Select>
-          </FormGroup>
-          <FormGroup>
-            <Label>Audience:</Label>
-            <Select
-            value={audience}
+        </FormGroup>
+        <FormGroup>
+          <Label>Audience:</Label>
+          <Select
+            value={venue}
             onChange={(e) => setaudience(e.target.value)}
             required
           >
             <option value="">Select Audience</option>
             <option value="College students">College students</option>
             <option value="Outside college">Outside college</option>
-            <option value="Both college and outsiders">Both college and outsiders</option>
+            <option value="Both college and outsiders">
+              Both college and outsiders
+            </option>
             {/* Add more options as needed */}
           </Select>
-          </FormGroup>
-          <FormGroup>
-            <Label>Requirements:</Label>
-            <TextArea
+        </FormGroup>
+        <FormGroup>
+          <Label>Requirements:</Label>
+          <TextArea
             //   name="requirements"
-              rows="4"
-              value={requirements}
-              onChange={(e) => setrequirements(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <Button onClick={handle_req_submit}type="submit">Submit</Button>
+            rows="4"
+            value={requirements}
+            onChange={(e) => setrequirements(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <Button onClick={handle_req_submit} type="submit">
+          Submit
+        </Button>
       </FormContainer>
     </Container>
-    );
-  }
+  );
+}
 
-
-  const Container = styled.div`
+const Container = styled.div`
   min-height: 100vh;
   /* min-width: 150vw; */
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #1a202c;
+  background-color: black;
+  margin-top:1rem;
+  margin-bottom:1rem;
 `;
 
-  const FormContainer = styled.div`
+const FormContainer = styled.div`
   max-width: 500px;
   min-width: 500px;
   /* display: flex;
@@ -209,7 +227,7 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 5px;
-  color: white;
+  color: black;
 `;
 
 const Input = styled.input`
@@ -293,4 +311,4 @@ const Select = styled.select`
 //     color: black;
 // `
 
-export default ActForm
+export default ActForm;
