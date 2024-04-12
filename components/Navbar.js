@@ -4,11 +4,11 @@ import { useState } from "react";
 import { styled } from "styled-components";
 // import BookingList from "./VenueList"
 import { useRouter } from "next/navigation";
-
+import { getAuth, signOut } from "firebase/auth";
 const Navbar = () => {
   const router = useRouter();
   const [displayReq, setDisplayReq] = useState(true); // Boolean state variable
-
+const auth=getAuth()
   const handlePageChange = () => {
     router.push("/venuelist");
   };

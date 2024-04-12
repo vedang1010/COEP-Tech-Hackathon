@@ -16,6 +16,8 @@ function ActForm() {
     const [venue, setvenue] = useState('');
     const [audience, setaudience] = useState('');
     const [requirements, setrequirements] = useState('');
+    const auth = getAuth();
+    const [user] = useAuthState(auth);
     const createChannel = (
       clubEmail,
       facultyAdvisorEmail,

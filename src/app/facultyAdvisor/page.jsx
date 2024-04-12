@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import app from "../config/config"
 import { getDatabase, ref, onValue, set } from "firebase/database";
-
+import { getAuth } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -25,7 +26,8 @@ const IndexPage = () => {
   const [activeTab, setActiveTab] = useState('pending'); // Default tab
   const [data, setData] = useState([]);
   const database = getDatabase(app);
-
+  const auth = getAuth();
+  const [user] = useAuthState(auth);
   useEffect(() => {
     fetchData();
   }, [activeTab]);
@@ -59,6 +61,24 @@ const IndexPage = () => {
 
   const fetchData = async (tab) => {
     try {
+
+      const rootRef2 = ref(database, "Clubs");
+      var club = ""
+      onValue(rootRef2, (snapshot) => {
+        const request = snapshot.val();
+        const newData = [];
+        for (const userId in request) {
+          const userData = request[userId];
+          // console.log(userData)
+          if (userData.advisor === user.email) {
+            console.log(userData.name)
+            club = userData.name;
+
+            newData.push(userData);
+          }
+        }
+        // setListData(newData);
+      });
       // console.log("REach")
       const rootRef = ref(database, "Requests");
       onValue(rootRef, (snapshot) => {
@@ -66,9 +86,12 @@ const IndexPage = () => {
         const newData = [];
         for (const userId in requests) {
           const userData = requests[userId];
-          if (userData.Facultystatus === tab) {
-            console.log(Object.values(userData))
-            newData.push(userData);
+          if (userData.club === club) {
+
+            if (userData.Facultystatus === tab) {
+              console.log(Object.values(userData))
+              newData.push(userData);
+            }
           }
         }
         setData(newData); // Update state with new data
@@ -83,7 +106,7 @@ const IndexPage = () => {
       <TabContainer>
         <TabButton onClick={() => handleTabClick('pending')} active={activeTab === 'pending'}>Pending</TabButton>
         <TabButton onClick={() => handleTabClick('accepted')} active={activeTab === 'accepted'}>Accepted</TabButton>
-        <TabButton onClick={() => handleTabClick('canceled')} active={activeTab === 'canceled'}>Canceled</TabButton>
+        <TabButton onClick={() => handleTabClick('cancelled')} active={activeTab === 'cancelled'}>cancelled</TabButton>
       </TabContainer>
 
       <div className="content">
@@ -132,9 +155,9 @@ const IndexPage = () => {
 
           </div>
         )}
-        {activeTab === 'canceled' && (
+        {activeTab === 'cancelled' && (
           <div>
-            <h2>Canceled Items</h2>
+            <h2>cancelled Items</h2>
             <div className="content">
               {data.map((item, index) => (
                 <div key={index}>
@@ -149,7 +172,7 @@ const IndexPage = () => {
               ))}
             </div>
 
-            {/* Render canceled items */}
+            {/* Render cancelled items */}
           </div>
         )}
       </div>
