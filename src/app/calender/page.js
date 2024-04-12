@@ -12,6 +12,7 @@ const GlobalStyle = createGlobalStyle`
   /* Set background color of calendar container to black */
   .CalendarGfg {
     background-color: black;
+    margin-bottom: 12rem;
   }
 
   /* Set date color to white */
@@ -23,12 +24,14 @@ const GlobalStyle = createGlobalStyle`
   .react-calendar__tile--now {
     background-color: green;
     color: black;
+    border-radius:15px; 
   }
 
   /* Set color of selected date to blue */
   .react-calendar__tile--active {
     background-color: blue;
     color: black;
+    border-radius:15px;
   }
 
   /* Set color of day names to black */
@@ -47,20 +50,32 @@ const GlobalStyle = createGlobalStyle`
   }
 
   /* Set overall calendar container to be responsive */
+  /* Set overall calendar container to be responsive */
   .CalendarContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
     width: 100%;
     max-width: 800px; /* Adjust max-width as needed */
   }
 
   /* Add custom styles for the list of events */
   .ListContainer {
-    margin-top: 20px;
-    background-color: #444; /* Dark background for the list */
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
   }
 
   .ListItem {
-    color: black; /* White text for list items */
+    color: pink; /* White text for list items */
+    padding: 10px;
+    background-color: #444; /* Dark background for the list */
+    width: 100%;
+    max-width: 400px; /* Adjust max-width as needed */
   }
 `;
 
@@ -78,7 +93,10 @@ const CalendarTitle = styled.h1`
 `;
 
 const StyledCalendar = styled(Calendar)`
-  width: 800px;
+  width: 700px;
+  margin-left:9%;
+  margin-right:9%;
+  border-radius:20px;
   /* Additional styles if needed */
 `;
 
@@ -87,7 +105,7 @@ const ListContainer = styled.div`
 `;
 
 const ListItem = styled.div`
-  margin-bottom: 10px;
+  margin-top: 15px;
 `;
 const CalendarGfg = () => {
   const [value, onChange] = useState(new Date());
@@ -151,17 +169,12 @@ const CalendarGfg = () => {
                 <p>Event Name: {item.title}</p>
                 <p>Event Start Time: {item.start_time}</p>
                 <p>Event End Time: {item.end_time}</p>
-                <p>Event Club: {item.end_time}</p>
+                <p>Event Club: {item.club}</p>
                 {/* Add more properties as needed */}
               </ListItem>
             ))}
           </ListContainer>
-
         )}
-        {/* <ListContainer>
-        <h2>Today's Events</h2>
-        {renderEventsForToday()}
-      </ListContainer> */}
       </CalendarContainer>
     </>
   );
