@@ -1,11 +1,27 @@
-// import React from 'react'
-import styled from 'styled-components'
-import Navbar from './Navbar'
-const Layout = () => {
-  return (
-    <Navbar></Navbar>
-    
-  )
+"use client";
+// import Header from "./Header"
+// import themes from "./themes"
+import styled from 'styled-components';
+import { useState, createContext } from 'react';
+import Navbar from './Navbar';
+// import { ToastContainer } from "react-toastify";
+// import 'react-toastify/dist/ReactToastify.css'
+
+const Layout = ({ children }) => {
+    return (
+        <LayoutWrapper>
+            <Navbar></Navbar>
+            {children}
+        </LayoutWrapper>
+    )
 }
 
-export default Layout
+const LayoutWrapper = styled.div`
+    min-height: 100vh;
+    background-color: blue;
+    /* background-image: ; */
+    color:green;
+`
+
+export default Layout;
+// export { App };
