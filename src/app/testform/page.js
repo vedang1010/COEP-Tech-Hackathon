@@ -2,7 +2,7 @@
 import React from 'react'
 import { styled } from "styled-components"
 
-function page() {
+function ActForm() {
     return (
         <Container>
       <FormContainer>
@@ -164,4 +164,4 @@ const Button = styled.button`
 //     color: black;
 // `
 
-export default page
+export default ActForm

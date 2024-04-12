@@ -5,33 +5,33 @@ import styled from 'styled-components';
 
 
 const Form = () => {
-//   const [formData, setFormData] = useState({
-//     audience: '',
-//     date: '',
-//     et: '',
-//     reason: '',
-//     requirements: '',
-//     st: '',
-//     title: ''
-//   });
+  const [formData, setFormData] = useState({
+    audience: '',
+    date: '',
+    et: '',
+    reason: '',
+    requirements: '',
+    st: '',
+    title: ''
+  });
 
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData(prevState => ({
-//       ...prevState,
-//       [name]: value
-//     }));
-//   };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     // Handle form submission
-//     console.log(formData);
-//   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log(formData);
+  };
 
   return (
     <FormContainer>
-      {/* <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Label htmlFor="audience">Audience:</Label>
         <Input
           type="text"
@@ -95,8 +95,8 @@ const Form = () => {
         />
 
         <Button type="submit">Submit</Button>
-      </form> */}
-      jjj
+      </form>
+      
     </FormContainer>
   );
 };
