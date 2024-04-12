@@ -2,7 +2,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { styled } from "styled-components"
-import app from "../../../config/config"
+import app from "../config/config"
 import { ref, set, getDatabase, onValue } from 'firebase/database';
 
 function ActForm() {

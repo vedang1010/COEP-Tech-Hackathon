@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from "firebase/app";
 import Layout from '../../../components/Layout'
+import Form from '../../../components/Form/page'
 import ActForm from '../testform/page';
 import { getDatabase, ref, onValue } from "firebase/database";
+import Remarks from '../remark/remark';
 
 const home = () => {
 // TODO: Add SDKs for Firebase products that you want to use
@@ -48,8 +50,9 @@ const firebaseConfig = {
     // <>
     <Layout>
     {true? <ActForm></ActForm>:<>cdbjh</>}
-    
+    <Remarks />
     </Layout>
+    
     // {/* </> */}
   )
 }
