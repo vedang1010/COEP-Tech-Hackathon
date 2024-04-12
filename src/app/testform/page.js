@@ -46,8 +46,6 @@ function ActForm() {
         catch (e) {
             console.error(e);
           }
-
-
     };
     return (
         <Container>
@@ -271,3 +269,5 @@ const Select = styled.select`
 // `
 
 export default ActForm
+
+
