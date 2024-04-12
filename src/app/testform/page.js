@@ -1,49 +1,144 @@
 "use client"
 import React from 'react'
+import { useEffect, useState } from 'react';
 import { styled } from "styled-components"
+import app from "../../../config/config"
+import { ref, set, getDatabase, onValue } from 'firebase/database';
 
-function page() {
+function ActForm() {
+    const [date, setdate] = useState('');
+    const [start_time,setstart_time] = useState('');
+    const [end_time, setend_time] = useState('');
+    const [title, settitle] = useState('');
+    const [reason, setreason] = useState('');
+    const [venue, setvenue] = useState('');
+    const [audience, setaudience] = useState('');
+    const [requirements, setrequirements] = useState('');
+
+    const handle_req_submit = () => {
+        try {
+        console.log(date);
+        console.log(start_time);
+
+        var idd = date+start_time+end_time;
+        const database = getDatabase(app); 
+      
+            const reference = ref(database, "Requests");
+            // console.log(reference);
+            const reference2 = ref(database, "Requests/" + idd);
+
+            console.log(reference2);
+
+            set(reference2, {
+                date: date,
+                start_time:start_time,
+                end_time: end_time,
+                title:title,
+                reason:reason,
+                venue:venue,
+                audience:audience,
+                requirements:requirements
+            });
+
+
+        }
+        catch (e) {
+            console.error(e);
+          }
+
+
+    };
     return (
         <Container>
       <FormContainer>
         <Title>Meeting Form</Title>
-        <form>
           <FormGroup>
             <Label>Date:</Label>
-            <Input type="date" name="date" />
+            <Input
+              type="date"
+              value={date}
+              onChange={(e) => setdate(e.target.value)}
+              required
+            />
           </FormGroup>
           <FormGroup>
             <Label>Start Time:</Label>
-            <Input type="time" name="startTime" />
+            <Input
+              type="time"
+              value={start_time}
+              onChange={(e) => setstart_time(e.target.value)}
+              required
+            />
           </FormGroup>
           <FormGroup>
             <Label>End Time:</Label>
-            <Input type="time" name="endTime" />
+            <Input
+              type="time"
+              value={end_time}
+              onChange={(e) => setend_time(e.target.value)}
+              required
+            />
           </FormGroup>
           <FormGroup>
             <Label>Title:</Label>
-            <Input type="text" name="title" />
+            <Input
+              type="text"
+              value={title}
+              onChange={(e) => settitle(e.target.value)}
+              required
+            />
           </FormGroup>
           <FormGroup>
             <Label>Reason:</Label>
-            <Input type="text" name="reason" />
+            <Input
+              type="text"
+              value={reason}
+              onChange={(e) => setreason(e.target.value)}
+              required
+            />
           </FormGroup>
           <FormGroup>
             <Label>Venue:</Label>
-            <Input type="text" name="venue" />
+            <Select
+            value={venue}
+            onChange={(e) => setvenue(e.target.value)}
+            required
+          >
+            <option value="">Select Venue</option>
+            <option value="Cogni">Cognizant Lab</option>
+            <option value="Main Auditorium">Main Auditorium</option>
+            <option value="Mini Auditorium">Mini Auditorium</option>
+            <option value="Hostel Ground">Hostel Ground</option>
+            {/* Add more options as needed */}
+          </Select>
           </FormGroup>
           <FormGroup>
             <Label>Audience:</Label>
-            <Input type="text" name="audience" />
+            <Select
+            value={venue}
+            onChange={(e) => setaudience(e.target.value)}
+            required
+          >
+            <option value="">Select Audience</option>
+            <option value="College students">College students</option>
+            <option value="Outside college">Outside college</option>
+            <option value="Both college and outsiders">Both college and outsiders</option>
+            {/* Add more options as needed */}
+          </Select>
           </FormGroup>
           <FormGroup>
             <Label>Requirements:</Label>
-            <TextArea name="requirements" rows="4" />
+            <TextArea
+            //   name="requirements"
+              rows="4"
+              value={requirements}
+              onChange={(e) => setrequirements(e.target.value)}
+              required
+            />
           </FormGroup>
-          <Button type="submit">Submit</Button>
-        </form>
+          <Button onClick={handle_req_submit}type="submit">Submit</Button>
       </FormContainer>
-      </Container>
+    </Container>
     );
   }
 
@@ -146,6 +241,16 @@ const Button = styled.button`
   }
 `;
 
+const Select = styled.select`
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #4a5568;
+  color: #fff;
+`;
+
 // const VenueListButton = styled.button`
 //     margin: 50px;
 //     width: 250px;
@@ -164,4 +269,4 @@ const Button = styled.button`
 //     color: black;
 // `
 
-export default page
+export default ActForm
