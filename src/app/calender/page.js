@@ -1,12 +1,11 @@
 "use client"
-
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import app from "../config/config"
-import { getDatabase, ref, onValue } from "firebase/database";
 
+import { getDatabase, ref, onValue } from "firebase/database";
 const GlobalStyle = createGlobalStyle`
   /* Calendar Component CSS */
 
@@ -90,61 +89,52 @@ const ListContainer = styled.div`
 const ListItem = styled.div`
   margin-bottom: 10px;
 `;
-
 const CalendarGfg = () => {
   const [value, onChange] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [listData, setListData] = useState([]);
   const database = getDatabase(app);
 
+  useEffect(() => {
+    const fetchDataForDate = (date) => {
+      const rootRef = ref(database, "Requests");
+      onValue(rootRef, (snapshot) => {
+        const venue = snapshot.val();
+        const newData = [];
+        for (const userId in venue) {
+          const userData = venue[userId];
+          if (userData.date === date) {
+            newData.push(userData);
+          }
+        }
+        setListData(newData);
+      });
+    };
+    
 
-useEffect(() => {
-  console.log("hello")
-  // console.log(database)
-  const rootRef = ref(database, "Venue");
-  onValue(rootRef, (snapshot) => {
-    const venue = snapshot.val();
-    // console.log(venue)
-    // const updatedWebsites = [];
-
-    for (const userId in venue) {
-      const userData = venue[userId];
-      console.log(userData.id1.date)
+    if (selectedDate) {
+      fetchDataForDate(selectedDate);
     }
-
-    // setWebsites(updatedWebsites);
-  });
-
-}, [database]);
+  }, [database, selectedDate]);
 
 
   // Dummy data for demonstration
-  const dataForDate = {
-    '2024-04-17': ['Event 1', 'Event 2', 'Event 3'],
-    '2024-04-18': ['Event on 18th'], // Corrected date
-    '2024-04-19': ['Event 4', 'Event 5'],
-    // Add more data as needed
+  const dataForDate = () => {
+    // const len=listData.length;
+    listData.forEach((userData) => {
+      console.log(userData);
+      // Perform operations on userData
+    });
   };
-
-  useEffect(() => {
-    // Automatically display today's events on load
-    const today = new Date().toISOString().split('T')[0];
-    setSelectedDate(today);
-    setListData(dataForDate[today] || []);
-  }, []); // Empty dependency array means this effect runs once on mount
-
   const handleDateClick = (date) => {
-    // Create a new Date object with the local time zone offset applied
     const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-    const formattedDate = localDate.toISOString().split('T')[0];
-    setSelectedDate(formattedDate);
-    setListData(dataForDate[formattedDate] || []);
-  };
 
-  // const renderEventsForToday = () => {
-  //   const todayEvents = dataForDate[selectedDate] || [];
-  //   return todayEvents.map((event, index) => <ListItem key={index}>{event}</ListItem>);
-  // };
+    const formattedDate = localDate.toISOString().split('T')[0];
+    console.log(formattedDate)
+    // console.log("FFF",date)
+    setSelectedDate(formattedDate);
+    setListData(listData)
+  };
 
   return (
     <>
@@ -156,14 +146,22 @@ useEffect(() => {
           <ListContainer>
             <h2>Events for {selectedDate}</h2>
             {listData.map((item, index) => (
-              <ListItem key={index}>{item}</ListItem>
+              <ListItem key={index}>
+                <p>Event Venue: {item.venue}</p>
+                <p>Event Name: {item.title}</p>
+                <p>Event Start Time: {item.start_time}</p>
+                <p>Event End Time: {item.end_time}</p>
+                <p>Event Club: {item.end_time}</p>
+                {/* Add more properties as needed */}
+              </ListItem>
             ))}
           </ListContainer>
+
         )}
         {/* <ListContainer>
-          <h2>Today's Events</h2>
-          {renderEventsForToday()}
-        </ListContainer> */}
+        <h2>Today's Events</h2>
+        {renderEventsForToday()}
+      </ListContainer> */}
       </CalendarContainer>
     </>
   );
