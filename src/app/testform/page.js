@@ -19,36 +19,43 @@ function ActForm() {
     clubEmail,
     facultyAdvisorEmail,
     venueInchargeEmail
-) => {
+  ) => {
     try {
-        const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
-        const database = getDatabase(app);
-        console.log("gugiui Channels/" + channelKey);
-        const channelRef = ref(database, "Channels/" + channelKey);
-        console.log("Channel ref:", channelRef);
-        console.log("Channel key:", channelKey);
+      console.log("Creating channel now inside enters");
+      console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
+      const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+      const channelKey = temp.replace(/[.@_]/g, '');
+      console.log("new keyyyy "+ channelKey)
+      // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+      const database = getDatabase(app);
+      console.log("kahskfj Channels/" + channelKey);
+      const channelRef = ref(database, `Channels/${channelKey}`);
+      console.log("Channel ref:", channelRef);
+      console.log("Channel key:", channelKey);
 
-        set(channelRef, {
-            clubEmail,
-            facultyAdvisorEmail,
-            venueInchargeEmail,
-            members: {
-              [facultyAdvisorEmail]: true, // Set faculty advisor as a member
-              [venueInchargeEmail]: true, // Set venue incharge as a member
-          },
-        }).then(() => {
-            console.log('Channel created successfully.');
-        }).catch((error) => {
-            console.error('Error creating channel:', error);
+      set(channelRef, {
+        clubEmail,
+        facultyAdvisorEmail,
+        venueInchargeEmail,
+        // members: {
+        //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
+        //   [venueInchargeEmail]: true, // Set venue incharge as a member
+        // },
+      })
+        .then(() => {
+          console.log("Channel created successfully.");
+        })
+        .catch((error) => {
+          console.error("Error creating channel:", error);
         });
     } catch (error) {
-        console.error('Error creating channel:', error);
+      console.error("Error creating channel:", error);
     }
-};
-
+  };
 
   const handle_req_submit = () => {
     try {
+      
       const clubEmail = "example@example.com";
       const facultyAdvisorEmail = "advisor@example.com";
       const venueInchargeEmail = "incharge@example.com";
@@ -56,7 +63,6 @@ function ActForm() {
       console.log(date);
       console.log(start_time);
 
-      
       var idd = date + start_time + end_time;
       const database = getDatabase(app);
 
@@ -77,9 +83,8 @@ function ActForm() {
         requirements: requirements,
       });
 
-      console.log("Creating channel now")
+      console.log("Creating channel now entering");
       createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
-
     } catch (e) {
       console.error(e);
     }
@@ -188,7 +193,9 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #1a202c;
+  background-color: black;
+  margin-top:1rem;
+  margin-bottom:1rem;
 `;
 
 const FormContainer = styled.div`

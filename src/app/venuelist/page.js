@@ -3,15 +3,22 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Navbar from "../../../components/Navbar";
 import { app } from "../config/config";
-import { ref, set, getDatabase, orderByChild, onValue } from "firebase/database";
+import Layout from "../../../components/Layout";
+import {
+  ref,
+  set,
+  getDatabase,
+  orderByChild,
+  onValue,
+} from "firebase/database";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 const Select = styled.select`
-  width: 100%;
+  width: 50%;
+  margin: 4rem auto 1rem 26vw;
   padding: 0.75rem;
-  margin-bottom: 1rem;
-  background-color: #444;
+  background-color: #F2A379;
   border: none;
   border-radius: 4px;
   color: #fff;
@@ -19,8 +26,22 @@ const Select = styled.select`
 `;
 
 const Option = styled.option`
-  background-color: #444;
-  color: #fff;
+  background-color: #EFD5B7;
+  color: black;
+`;
+
+const Output = styled.output`
+  color: white;
+  padding: 2rem;
+  width: 50%;
+  height: 100%;
+  margin: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease; /* Add transition for smooth effect */
+  line-height: 1.5;
+  &:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.12);
+  }
 `;
 
 const Page = () => {
@@ -53,7 +74,10 @@ const Page = () => {
           const requestsData = [];
           snapshot.forEach((childSnapshot) => {
             const request = childSnapshot.val();
-            if (request.status === 'accepted' && request.venue === selectedVenue) {
+            if (
+              request.status === "accepted" &&
+              request.venue === selectedVenue
+            ) {
               requestsData.push(request);
             }
           });
@@ -66,8 +90,8 @@ const Page = () => {
   }, [database, selectedVenue]);
 
   return (
-    <>
-      <Navbar />
+    // <>
+    <Layout>
       <Select
         value={selectedVenue}
         onChange={(e) => setSelectedVenue(e.target.value)}
@@ -81,16 +105,32 @@ const Page = () => {
       </Select>
 
       {requests.map((item, index) => (
-        <div key={index}>
-          <h2>Club: {item.club}</h2>
-          <p>Title: {item.title}</p>
-          <p>Start Time: {item.start_time}</p>
-          <p>End Time: {item.end_time}</p>
-          <p>Status: {item.status}</p>
-        </div>
+        <OutputWrapper>
+          <Output key={index} className="output">
+            <h2>Club: {item.club}</h2>
+            <p>Title: {item.title}</p>
+            <p>Start Time: {item.start_time}</p>
+            <p>End Time: {item.end_time}</p>
+            <p>Status: {item.status}</p>
+          </Output>
+        </OutputWrapper>
       ))}
-    </>
+    </Layout>
   );
 };
-
+const OutputWrapper = styled.div`
+  height: 100%;
+  width: 50%;
+  border: 2px solid  #F2A379;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4rem auto 1rem 20rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease; /* Add transition for smooth effect */
+  /* background-color: #F2A379; */
+  &:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.12);
+  }
+`;
 export default Page;
