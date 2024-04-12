@@ -185,7 +185,7 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 5px;
-  color: black;
+  color: white;
 `;
 
 const Input = styled.input`
