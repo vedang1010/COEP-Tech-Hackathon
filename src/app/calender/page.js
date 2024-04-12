@@ -1,5 +1,5 @@
 "use client"
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -38,39 +38,47 @@ const CalendarGfg = () => {
   const [listData, setListData] = useState([]);
   const database = getDatabase(app);
 
+  useEffect(() => {
+    const fetchDataForDate = (date) => {
+      const rootRef = ref(database, "Requests");
+      onValue(rootRef, (snapshot) => {
+        const venue = snapshot.val();
+        for (const userId in venue) {
+          const userData = venue[userId];
+          if (userData.date == selectedDate) {
+            console.log(userData)
+            listData.push(userData)
+          }
+        }
+        setListData(listData)
+      });
+    };
 
-useEffect(() => {
-  console.log("hello")
-  // console.log(database)
-  const rootRef = ref(database, "Venue");
-  onValue(rootRef, (snapshot) => {
-    const venue = snapshot.val();
-    // console.log(venue)
-    // const updatedWebsites = [];
-
-    for (const userId in venue) {
-      const userData = venue[userId];
-      console.log(userData.id1.date)
+    if (selectedDate) {
+      fetchDataForDate(selectedDate);
     }
-
-    // setWebsites(updatedWebsites);
-  });
-
-}, [database]);
-
-
-  // Dummy data for demonstration
-  const dataForDate = {
-    '2024-04-12': ['Event 1', 'Event 2', 'Event 3'],
-    '2024-04-13': ['Event 4', 'Event 5'],
-    // Add more data as needed
-  };
+  }, [database, selectedDate]);
 
   const handleDateClick = (date) => {
     const formattedDate = date.toISOString().split('T')[0];
+    console.log(formattedDate)
+    // console.log("FFF",date)
     setSelectedDate(formattedDate);
-    setListData(dataForDate[formattedDate] || []);
+
   };
+  // Dummy data for demonstration
+  const dataForDate = {
+
+    // '2024-04-12': ['Event 1', 'Event 2', 'Event 3'],
+    // '2024-04-13': ['Event 4', 'Event 5'],
+    // Add more data as needed
+  };
+
+  // const handleDateClick = (date) => {
+  //   const formattedDate = date.toISOString().split('T')[0];
+  //   setSelectedDate(formattedDate);
+  //   setListData(dataForDate[formattedDate] || []);
+  // };
 
   return (
     <CalendarContainer>
