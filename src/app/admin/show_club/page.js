@@ -1,10 +1,10 @@
-"use client"
+'use client'
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import app from "../../config/config"
-
 import { getDatabase, ref, onValue } from "firebase/database";
-
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 const Title = styled.h1`
   text-align: center;
   margin-bottom: 20px;
@@ -42,6 +42,7 @@ const Button = styled.button`
 `;
 
 const show_all = () => {
+  const router = useRouter();
     const [listData, setListData] = useState([]);
     const database = getDatabase(app);
     useEffect(() => {
@@ -51,54 +52,35 @@ const show_all = () => {
             const newData = [];
             for (const userId in club) {
                 const userData = club[userId];
-                // if (userData.date === date) {
-                  newData.push(userData);
-                // }
-                // console.log(userData)
-              }
-              console.log(newData);
-              setListData(newData);
+                newData.push(userData);
+            }
+            setListData(newData);
         })
-        // const fetchDataForDate = (date) => {
-        //   const rootRef = ref(database, "Requests");
-        //   onValue(rootRef, (snapshot) => {
-        //     const venue = snapshot.val();
-        //     const newData = [];
-        //     for (const userId in venue) {
-        //       const userData = venue[userId];
-        //       if (userData.date === date) {
-        //         newData.push(userData);
-        //       }
-        //     }
-        //     setListData(newData);
-        //   });
-        // };
-        
-    
-        // if (selectedDate) {
-        //   fetchDataForDate(selectedDate);
-        // }
-      }, [database]);
-  return (
-    <>
+    }, [database]);
+
+    const handleFacultyAdvisorChange = (clubName) => {
+        // Set club name in cookie
+        Cookies.set('clubName', clubName);
+        // Redirect or perform any other action as needed
+        // For example:
+        // history.push('/change-faculty-advisor');
+        router.push('/updateInfo')
+    };
+
+    return (
+        <>
             <Title>Clubs And Faculty Advisor</Title>
             <Container>
                 {listData.map((item,index)=>(
                     <Card key={index}>
                         <p style={{color:"black"}}>Club Name: {item.name}</p>
                         <p style={{color:"black"}}>Advisor mail id: {item.advisor}</p>
-                        {/* <p>Event Start Time: {item.start_time}</p>
-                        <p>Event End Time: {item.end_time}</p>
-                        <p>Event Club: {item.end_time}</p> */}
-                        {/* Add more properties as needed */}
-                        <Button type="submit">Change Faculty Advisor</Button>
+                        <Button onClick={() => handleFacultyAdvisorChange(item.name)}>Change Faculty Advisor</Button>
                     </Card>
                 ))}
             </Container>
         </>
-  )
+    )
 }
 
-
-
-export default show_all
+export default show_all;
