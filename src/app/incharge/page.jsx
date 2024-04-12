@@ -42,7 +42,7 @@ const IndexPage = () => {
     // const reqData = reqSnapshot.val();
     // const request = ;
 
-    await set(ref(database, `Requests/${id}/Facultystatus`), 'accepted');
+    await set(ref(database, `Requests/${id}/status`), 'accepted');
 
   }
   const handleCancel = async (id) => {
@@ -52,7 +52,7 @@ const IndexPage = () => {
     // const reqData = reqSnapshot.val();
     // const request = ;
 
-    await set(ref(database, `Requests/${id}/Facultystatus`), 'cancelled');
+    await set(ref(database, `Requests/${id}/status`), 'cancelled');
 
   }
 
@@ -66,7 +66,7 @@ const IndexPage = () => {
         const newData = [];
         for (const userId in requests) {
           const userData = requests[userId];
-          if (userData.Facultystatus === tab) {
+          if (userData.status === tab && userData.Facultystatus=="accepted") {
             console.log(Object.values(userData))
             newData.push(userData);
           }

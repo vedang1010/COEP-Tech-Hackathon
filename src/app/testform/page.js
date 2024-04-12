@@ -1,28 +1,69 @@
-"use client";
-import React from "react";
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
-import { app } from "../config/config";
-import { ref, set, getDatabase, onValue } from "firebase/database";
+"use client"
+import React from 'react'
+import { useEffect, useState } from 'react';
+import { styled } from "styled-components"
+import app from "../config/config"
+import { ref, set, getDatabase, onValue } from 'firebase/database';
+import { getAuth } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 function ActForm() {
-  const [date, setdate] = useState("");
-  const [start_time, setstart_time] = useState("");
-  const [end_time, setend_time] = useState("");
-  const [title, settitle] = useState("");
-  const [reason, setreason] = useState("");
-  const [venue, setvenue] = useState("");
-  const [audience, setaudience] = useState("");
-  const [requirements, setrequirements] = useState("");
-  const [remark, setremark] = useState("");
+    const [date, setdate] = useState('');
+    const [start_time,setstart_time] = useState('');
+    const [end_time, setend_time] = useState('');
+    const [title, settitle] = useState('');
+    const [reason, setreason] = useState('');
+    const [venue, setvenue] = useState('');
+    const [audience, setaudience] = useState('');
+    const [requirements, setrequirements] = useState('');
+    const createChannel = (
+      clubEmail,
+      facultyAdvisorEmail,
+      venueInchargeEmail
+    ) => {
+      try {
+        console.log("Creating channel now inside enters");
+        console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
+        const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+        const channelKey = temp.replace(/[.@_]/g, '');
+        console.log("new keyyyy "+ channelKey)
+        // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+        const database = getDatabase(app);
+        console.log("kahskfj Channels/" + channelKey);
+        const channelRef = ref(database, `Channels/${channelKey}`);
+        console.log("Channel ref:", channelRef);
+        console.log("Channel key:", channelKey);
+  
+        set(channelRef, {
+          clubEmail,
+          facultyAdvisorEmail,
+          venueInchargeEmail,
+          // members: {
+          //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
+          //   [venueInchargeEmail]: true, // Set venue incharge as a member
+          // },
+        })
+          .then(() => {
+            console.log("Channel created successfully.");
+          })
+          .catch((error) => {
+            console.error("Error creating channel:", error);
+          });
+      } catch (error) {
+        console.error("Error creating channel:", error);
+      }
+    };
+    const handle_req_submit = () => {
+        try {
+        console.log(date);
+        console.log(start_time);
 
-  const handle_req_submit = () => {
-    try {
-
-      var idd = date + start_time + end_time;
-      const database = getDatabase(app);
-
-      const reference2 = ref(database, "Requests/" + idd);
+        var idd = date+start_time+end_time;
+        const database = getDatabase(app); 
+      
+            const reference = ref(database, "Requests");
+            // console.log(reference);
+            const reference2 = ref(database, "Requests/" + idd);
 
       
 
