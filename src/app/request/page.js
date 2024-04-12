@@ -9,7 +9,7 @@ const page = () => {
   return (
     <Layout>
         <ActForm></ActForm>
-        <Remarks></Remarks>
+        {/* <Remarks></Remarks> */}
     </Layout>
   )
 }
