@@ -158,6 +158,7 @@ const SignUpPage = () => {
       const updatedUserData = {
         ...userData,
         position: selectedPosition,
+        email:email,
       };
       console.log("Updated user data:", updatedUserData);
   
