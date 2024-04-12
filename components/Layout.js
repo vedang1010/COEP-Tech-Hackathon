@@ -6,7 +6,6 @@ import { useState, createContext } from 'react';
 import Navbar from './Navbar';
 // import { ToastContainer } from "react-toastify";
 // import 'react-toastify/dist/ReactToastify.css'
-
 const Layout = ({ children }) => {
     return (
         <LayoutWrapper>
@@ -18,7 +17,7 @@ const Layout = ({ children }) => {
 
 const LayoutWrapper = styled.div`
     min-height: 100vh;
-    background-color: blue;
+    background-color: black;
     /* background-image: ; */
     color:green;
 `

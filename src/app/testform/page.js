@@ -63,8 +63,17 @@ function ActForm() {
       console.log(date);
       console.log(start_time);
 
-      var idd = date + start_time + end_time;
-      const database = getDatabase(app);
+            set(reference2, {
+                date: date,
+                start_time:start_time,
+                end_time: end_time,
+                title:title,
+                reason:reason,
+                venue:venue,
+                audience:audience,
+                requirements:requirements,
+                status:'pending'
+            });
 
       const reference = ref(database, "Requests");
       // console.log(reference);
@@ -152,11 +161,11 @@ function ActForm() {
             <option value="Hostel Ground">Hostel Ground</option>
             {/* Add more options as needed */}
           </Select>
-        </FormGroup>
-        <FormGroup>
-          <Label>Audience:</Label>
-          <Select
-            value={venue}
+          </FormGroup>
+          <FormGroup>
+            <Label>Audience:</Label>
+            <Select
+            value={audience}
             onChange={(e) => setaudience(e.target.value)}
             required
           >
@@ -229,7 +238,7 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 5px;
-  color: black;
+  color: white;
 `;
 
 const Input = styled.input`
