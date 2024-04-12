@@ -32,7 +32,7 @@ const SignIn = () => {
           const position = userData.position;
           console.log('Position:', position);
           Cookies.set('position', position);
-          router.push('/')
+          router.push('/home')
         } else {
           console.log('User data not found.');
         }

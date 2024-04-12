@@ -116,7 +116,7 @@ function ActForm() {
           <FormGroup>
             <Label>Audience:</Label>
             <Select
-            value={venue}
+            value={audience}
             onChange={(e) => setaudience(e.target.value)}
             required
           >
@@ -186,7 +186,7 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 5px;
-  color: black;
+  color: white;
 `;
 
 const Input = styled.input`
