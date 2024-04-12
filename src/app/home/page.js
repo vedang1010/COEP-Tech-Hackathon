@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from "firebase/app";
 import Layout from '../../../components/Layout'
-import Form from '../../../components/Form/page'
-
+import ActForm from '../testform/page';
 import { getDatabase, ref, onValue } from "firebase/database";
 
 const home = () => {
@@ -48,8 +47,8 @@ useEffect(() => {
   return (
     // <>
     <Layout>
-    hbbhhjferggr
-    <Form></Form>
+    {true? <ActForm></ActForm>:<>cdbjh</>}
+    
     </Layout>
     // {/* </> */}
   )
