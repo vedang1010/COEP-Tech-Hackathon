@@ -13,9 +13,9 @@ const TabContainer = styled.div`
 const TabButton = styled.button`
   padding: 15px 25px;
   margin: 20px 10px;
-  background-color: ${props => props.active ? '#3285A6' : 'rgba(50, 133, 166, 0.5)'};
+  background-color: ${props => props.active ? '#023e8a' : 'transparent'};
   color: ${props => props.active ? 'white' : 'white'};
-  border: 1px solid #3285A6;
+  border: 1px solid blue;
   border-radius: 5px;
   cursor: pointer;
   font-size:20px;
@@ -42,7 +42,7 @@ const IndexPage = () => {
     // const reqData = reqSnapshot.val();
     // const request = ;
 
-    await set(ref(database, `Requests/${id}/Facultystatus`), 'accepted');
+    await set(ref(database, `Requests/${id}/status`), 'accepted');
 
   }
   const handleCancel = async (id) => {
@@ -52,7 +52,7 @@ const IndexPage = () => {
     // const reqData = reqSnapshot.val();
     // const request = ;
 
-    await set(ref(database, `Requests/${id}/Facultystatus`), 'cancelled');
+    await set(ref(database, `Requests/${id}/status`), 'cancelled');
 
   }
 
@@ -66,7 +66,7 @@ const IndexPage = () => {
         const newData = [];
         for (const userId in requests) {
           const userData = requests[userId];
-          if (userData.Facultystatus === tab) {
+          if (userData.status === tab && userData.Facultystatus=="accepted") {
             console.log(Object.values(userData))
             newData.push(userData);
           }
