@@ -37,7 +37,8 @@ function ActForm() {
                 reason:reason,
                 venue:venue,
                 audience:audience,
-                requirements:requirements
+                requirements:requirements,
+                status:'pending'
             });
 
 
