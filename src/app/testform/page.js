@@ -115,7 +115,7 @@ function ActForm() {
           <FormGroup>
             <Label>Audience:</Label>
             <Select
-            value={venue}
+            value={audience}
             onChange={(e) => setaudience(e.target.value)}
             required
           >
