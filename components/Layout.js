@@ -19,7 +19,6 @@ const LayoutWrapper = styled.div`
     min-height: 100vh;
     background-color: black;
     /* background-image: ; */
-    color:green;
 `
 
 export default Layout;

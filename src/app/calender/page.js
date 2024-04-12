@@ -12,6 +12,7 @@ const GlobalStyle = createGlobalStyle`
   /* Set background color of calendar container to black */
   .CalendarGfg {
     background-color: black;
+    margin-bottom: 12rem;
   }
 
   /* Set date color to white */
@@ -47,20 +48,32 @@ const GlobalStyle = createGlobalStyle`
   }
 
   /* Set overall calendar container to be responsive */
+  /* Set overall calendar container to be responsive */
   .CalendarContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
     width: 100%;
     max-width: 800px; /* Adjust max-width as needed */
   }
 
   /* Add custom styles for the list of events */
   .ListContainer {
-    margin-top: 20px;
-    background-color: #444; /* Dark background for the list */
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
   }
 
   .ListItem {
-    color: black; /* White text for list items */
+    color: pink; /* White text for list items */
+    padding: 10px;
+    background-color: #444; /* Dark background for the list */
+    width: 100%;
+    max-width: 400px; /* Adjust max-width as needed */
   }
 `;
 
@@ -78,7 +91,10 @@ const CalendarTitle = styled.h1`
 `;
 
 const StyledCalendar = styled(Calendar)`
-  width: 800px;
+  width: 700px;
+  margin-left:9%;
+  margin-right:9%;
+  border-radius:20px;
   /* Additional styles if needed */
 `;
 
@@ -158,10 +174,6 @@ const CalendarGfg = () => {
           </ListContainer>
 
         )}
-        {/* <ListContainer>
-        <h2>Today's Events</h2>
-        {renderEventsForToday()}
-      </ListContainer> */}
       </CalendarContainer>
     </>
   );

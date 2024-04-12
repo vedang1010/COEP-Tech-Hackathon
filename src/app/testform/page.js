@@ -72,7 +72,10 @@ function ActForm() {
                 venue:venue,
                 audience:audience,
                 requirements:requirements,
+<<<<<<< Updated upstream
                 status:'pending'
+=======
+>>>>>>> Stashed changes
             });
 
       const reference = ref(database, "Requests");
@@ -202,7 +205,9 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #1a202c;
+  background-color: black;
+  margin-bottom:10px;
+  margin-top:2rem;
 `;
 
 const FormContainer = styled.div`
