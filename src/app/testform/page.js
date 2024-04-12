@@ -67,19 +67,25 @@ function ActForm() {
 
       
 
-      set(reference2, {
-        date: date,
-        start_time: start_time,
-        end_time: end_time,
-        title: title,
-        reason: reason,
-        venue: venue,
-        audience: audience,
-        requirements: requirements,
-        remark:remark,
-      });
-      // console.log("new dataaa "+ reference2);
-      
+            set(reference2, {
+                date: date,
+                start_time:start_time,
+                end_time: end_time,
+                title:title,
+                reason:reason,
+                venue:venue,
+                audience:audience,
+                requirements:requirements,
+                status:'pending',
+                Facultystatus:'pending',
+                facRemark:'',
+                inchargeRemark:''
+
+
+            });
+
+      console.log("Creating channel now entering");
+      createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
     } catch (e) {
       console.error(e);
     }
