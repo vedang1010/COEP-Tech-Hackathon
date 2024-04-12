@@ -6,7 +6,7 @@ import app from "../config/config"
 import { ref, set, getDatabase, onValue } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
-
+import { toast } from 'react-toastify';
 function ActForm() {
     const [date, setdate] = useState('');
     const [start_time,setstart_time] = useState('');
@@ -78,7 +78,7 @@ function ActForm() {
                 requirements:requirements,
                 status:'pending'
             });
-
+      toast.success("Request Sent Successfully");
       console.log("Creating channel now entering");
       createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
     } catch (e) {
@@ -190,7 +190,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: black;
-  margin-top:1rem;
+  margin-top:3.5rem;
   margin-bottom:1rem;
 `;
 
@@ -227,7 +227,7 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 5px;
-  color: black;
+  color: #fff;
 `;
 
 const Input = styled.input`
