@@ -1,95 +1,82 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/app/config/config";
+import { useRouter } from "next/navigation";
+import { signOut } from "firebase/auth";
+import styled from "styled-components";
+import Cookies from "js-cookie";
+import { getAuth } from "firebase/auth";
+import CustomErrorBoundary from "./ErrorBoundary/ErrorBoundary";
+// import { useRouter } from 'next/router';
+const Container = styled.main`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  padding: 3rem;
+`;
+
+const LogoutButton = styled.button`
+  padding: 1rem 2rem;
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #ff7875;
+  }
+`;
+
+const Home = ({ user }) => {
+  const router = useRouter();
+
+  // Retrieve position from cookies, default to null
+  const position = Cookies.get("position") || null;
+
+  useEffect(() => {
+    const userSession = sessionStorage.getItem("user");
+    if (!user && !userSession) {
+      router.push("/sign-in");
+    }
+  }, [user, router]);
+
+
+
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        sessionStorage.removeItem('user');
+        router.push('/sign-in'); // Redirect to the sign-up page after signing out
+      })
+      .catch((error) => {
+        console.error('Error signing out:', error);
+        // Handle sign-out error
+      });
+  };
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <Container>
+      <h1>Welcome Home!</h1>
+      <p>Your position: {position}</p>
+      <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
+    </Container>
   );
 }
+
+Home.getInitialProps = async () => {
+  try {
+    const auth = getAuth();
+    const [user] = useAuthState(auth);
+    return { user };
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return { user: null };
+  }
+}
+
+export default Home;
