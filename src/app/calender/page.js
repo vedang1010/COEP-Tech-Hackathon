@@ -5,6 +5,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import app from "../config/config"
+import { getDatabase, ref, onValue } from "firebase/database";
 
 const GlobalStyle = createGlobalStyle`
   /* Calendar Component CSS */
