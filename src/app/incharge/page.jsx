@@ -83,7 +83,7 @@ const IndexPage = () => {
       <TabContainer>
         <TabButton onClick={() => handleTabClick('pending')} active={activeTab === 'pending'}>Pending</TabButton>
         <TabButton onClick={() => handleTabClick('accepted')} active={activeTab === 'accepted'}>Accepted</TabButton>
-        <TabButton onClick={() => handleTabClick('canceled')} active={activeTab === 'canceled'}>Canceled</TabButton>
+        <TabButton onClick={() => handleTabClick('cancelled')} active={activeTab === 'cancelled'}>cancelled</TabButton>
       </TabContainer>
 
       <div className="content">
@@ -132,9 +132,9 @@ const IndexPage = () => {
 
           </div>
         )}
-        {activeTab === 'canceled' && (
+        {activeTab === 'cancelled' && (
           <div>
-            <h2>Canceled Items</h2>
+            <h2>cancelled Items</h2>
             <div className="content">
               {data.map((item, index) => (
                 <div key={index}>
@@ -149,7 +149,7 @@ const IndexPage = () => {
               ))}
             </div>
 
-            {/* Render canceled items */}
+            {/* Render cancelled items */}
           </div>
         )}
       </div>

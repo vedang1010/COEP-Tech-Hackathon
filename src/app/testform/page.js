@@ -16,6 +16,8 @@ function ActForm() {
     const [venue, setvenue] = useState('');
     const [audience, setaudience] = useState('');
     const [requirements, setrequirements] = useState('');
+    const auth = getAuth();
+    const [user] = useAuthState(auth);
     const createChannel = (
       clubEmail,
       facultyAdvisorEmail,
@@ -60,8 +62,25 @@ function ActForm() {
 
         var idd = date+start_time+end_time;
         const database = getDatabase(app); 
-      
+        const rootRef = ref(database, "Clubs");
+        var club=""
+        onValue(rootRef, (snapshot) => {
+          const request = snapshot.val();
+          const newData = [];
+          for (const userId in request) {
+            const userData = request[userId];
+            // console.log(userData)
+            if (userData.email === user.email) {
+              console.log(userData.name)
+              club=userData.name;
+
+              newData.push(userData);
+            }
+          }
+          // setListData(newData);
+        });
             const reference = ref(database, "Requests");
+           
             // console.log(reference);
             const reference2 = ref(database, "Requests/" + idd);
 
@@ -76,7 +95,14 @@ function ActForm() {
                 venue:venue,
                 audience:audience,
                 requirements:requirements,
-                status:'pending'
+                status:'pending',
+                Facultystatus:'pending',
+                facRemark:'',
+                inchargeRemark:'',
+                club:club,
+                id:idd
+
+
             });
       toast.success("Request Sent Successfully");
       console.log("Creating channel now entering");
