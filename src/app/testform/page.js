@@ -14,63 +14,17 @@ function ActForm() {
   const [venue, setvenue] = useState("");
   const [audience, setaudience] = useState("");
   const [requirements, setrequirements] = useState("");
-
-  const createChannel = (
-    clubEmail,
-    facultyAdvisorEmail,
-    venueInchargeEmail
-  ) => {
-    try {
-      console.log("Creating channel now inside enters");
-      console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
-      const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
-      const channelKey = temp.replace(/[.@_]/g, '');
-      console.log("new keyyyy "+ channelKey)
-      // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
-      const database = getDatabase(app);
-      console.log("kahskfj Channels/" + channelKey);
-      const channelRef = ref(database, `Channels/${channelKey}`);
-      console.log("Channel ref:", channelRef);
-      console.log("Channel key:", channelKey);
-
-      set(channelRef, {
-        clubEmail,
-        facultyAdvisorEmail,
-        venueInchargeEmail,
-        // members: {
-        //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
-        //   [venueInchargeEmail]: true, // Set venue incharge as a member
-        // },
-      })
-        .then(() => {
-          console.log("Channel created successfully.");
-        })
-        .catch((error) => {
-          console.error("Error creating channel:", error);
-        });
-    } catch (error) {
-      console.error("Error creating channel:", error);
-    }
-  };
+  const [remark, setremark] = useState("");
 
   const handle_req_submit = () => {
     try {
-      
-      const clubEmail = "example@example.com";
-      const facultyAdvisorEmail = "advisor@example.com";
-      const venueInchargeEmail = "incharge@example.com";
-
-      console.log(date);
-      console.log(start_time);
 
       var idd = date + start_time + end_time;
       const database = getDatabase(app);
 
-      const reference = ref(database, "Requests");
-      // console.log(reference);
       const reference2 = ref(database, "Requests/" + idd);
 
-      console.log(reference2);
+      
 
       set(reference2, {
         date: date,
@@ -81,10 +35,10 @@ function ActForm() {
         venue: venue,
         audience: audience,
         requirements: requirements,
+        remark:remark,
       });
-
-      console.log("Creating channel now entering");
-      createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
+      // console.log("new dataaa "+ reference2);
+      
     } catch (e) {
       console.error(e);
     }
@@ -99,7 +53,7 @@ function ActForm() {
             type="date"
             value={date}
             onChange={(e) => setdate(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -108,7 +62,7 @@ function ActForm() {
             type="time"
             value={start_time}
             onChange={(e) => setstart_time(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -117,7 +71,7 @@ function ActForm() {
             type="time"
             value={end_time}
             onChange={(e) => setend_time(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -126,7 +80,7 @@ function ActForm() {
             type="text"
             value={title}
             onChange={(e) => settitle(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -135,7 +89,7 @@ function ActForm() {
             type="text"
             value={reason}
             onChange={(e) => setreason(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -143,7 +97,7 @@ function ActForm() {
           <Select
             value={venue}
             onChange={(e) => setvenue(e.target.value)}
-            required
+            
           >
             <option value="">Select Venue</option>
             <option value="Cogni">Cognizant Lab</option>
@@ -158,7 +112,7 @@ function ActForm() {
           <Select
             value={venue}
             onChange={(e) => setaudience(e.target.value)}
-            required
+            
           >
             <option value="">Select Audience</option>
             <option value="College students">College students</option>
@@ -176,7 +130,7 @@ function ActForm() {
             rows="4"
             value={requirements}
             onChange={(e) => setrequirements(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <Button onClick={handle_req_submit} type="submit">

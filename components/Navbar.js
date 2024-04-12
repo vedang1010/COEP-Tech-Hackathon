@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 // import BookingList from "./VenueList"
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const position = Cookies.get("position") || null;
+  console.log(position)
   const router = useRouter();
   const [displayReq, setDisplayReq] = useState(true); // Boolean state variable
 
@@ -33,8 +36,9 @@ const Navbar = () => {
 
   return (
     <NavbarContainer>
+        
       <VenueListButton onClick={handleHomeChange}>Home</VenueListButton>
-      <VenueListButton onClick={handleDisplayChange}>Request </VenueListButton>
+      {position === "Venue In Charge"? <VenueListButton onClick={handleDisplayChange}>Pending Requestes </VenueListButton>:<VenueListButton onClick={handleDisplayChange}>Request </VenueListButton>}
       <VenueListButton onClick={handlePageChange}>Venue</VenueListButton>
       <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
     </NavbarContainer>
