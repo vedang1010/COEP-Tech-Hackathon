@@ -24,12 +24,14 @@ const GlobalStyle = createGlobalStyle`
   .react-calendar__tile--now {
     background-color: green;
     color: black;
+    border-radius:15px; 
   }
 
   /* Set color of selected date to blue */
   .react-calendar__tile--active {
     background-color: blue;
     color: black;
+    border-radius:15px;
   }
 
   /* Set color of day names to black */
@@ -103,7 +105,7 @@ const ListContainer = styled.div`
 `;
 
 const ListItem = styled.div`
-  margin-bottom: 10px;
+  margin-top: 15px;
 `;
 const CalendarGfg = () => {
   const [value, onChange] = useState(new Date());
