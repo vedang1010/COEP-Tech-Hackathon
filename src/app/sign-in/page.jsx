@@ -33,6 +33,7 @@ const SignIn = () => {
           setInvalidLogin(false); // Reset invalid login state on successful login
           router.push('/');
 
+          router.push('/home')
         } else {
           setInvalidLogin(true);
           console.log('User data not found.');

@@ -1,63 +1,200 @@
 "use client"
 import React from 'react'
+import { useEffect, useState } from 'react';
 import { styled } from "styled-components"
+import app from "../config/config"
+import { ref, set, getDatabase, onValue } from 'firebase/database';
+import { getAuth } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 function ActForm() {
-    return (
-        <Container>
+    const [date, setdate] = useState('');
+    const [start_time,setstart_time] = useState('');
+    const [end_time, setend_time] = useState('');
+    const [title, settitle] = useState('');
+    const [reason, setreason] = useState('');
+    const [venue, setvenue] = useState('');
+    const [audience, setaudience] = useState('');
+    const [requirements, setrequirements] = useState('');
+    const createChannel = (
+      clubEmail,
+      facultyAdvisorEmail,
+      venueInchargeEmail
+    ) => {
+      try {
+        console.log("Creating channel now inside enters");
+        console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
+        const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+        const channelKey = temp.replace(/[.@_]/g, '');
+        console.log("new keyyyy "+ channelKey)
+        // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+        const database = getDatabase(app);
+        console.log("kahskfj Channels/" + channelKey);
+        const channelRef = ref(database, `Channels/${channelKey}`);
+        console.log("Channel ref:", channelRef);
+        console.log("Channel key:", channelKey);
+  
+        set(channelRef, {
+          clubEmail,
+          facultyAdvisorEmail,
+          venueInchargeEmail,
+          // members: {
+          //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
+          //   [venueInchargeEmail]: true, // Set venue incharge as a member
+          // },
+        })
+          .then(() => {
+            console.log("Channel created successfully.");
+          })
+          .catch((error) => {
+            console.error("Error creating channel:", error);
+          });
+      } catch (error) {
+        console.error("Error creating channel:", error);
+      }
+    };
+    const handle_req_submit = () => {
+        try {
+        console.log(date);
+        console.log(start_time);
+
+        var idd = date+start_time+end_time;
+        const database = getDatabase(app); 
+      
+            const reference = ref(database, "Requests");
+            // console.log(reference);
+            const reference2 = ref(database, "Requests/" + idd);
+
+      console.log(reference2);
+
+            set(reference2, {
+                date: date,
+                start_time:start_time,
+                end_time: end_time,
+                title:title,
+                reason:reason,
+                venue:venue,
+                audience:audience,
+                requirements:requirements,
+                status:'pending'
+            });
+
+      console.log("Creating channel now entering");
+      createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return (
+    <Container>
       <FormContainer>
         <Title>Meeting Form</Title>
-        <form>
-          <FormGroup>
-            <Label>Date:</Label>
-            <Input type="date" name="date" />
-          </FormGroup>
-          <FormGroup>
-            <Label>Start Time:</Label>
-            <Input type="time" name="startTime" />
-          </FormGroup>
-          <FormGroup>
-            <Label>End Time:</Label>
-            <Input type="time" name="endTime" />
-          </FormGroup>
-          <FormGroup>
-            <Label>Title:</Label>
-            <Input type="text" name="title" />
-          </FormGroup>
-          <FormGroup>
-            <Label>Reason:</Label>
-            <Input type="text" name="reason" />
-          </FormGroup>
-          <FormGroup>
-            <Label>Venue:</Label>
-            <Input type="text" name="venue" />
-          </FormGroup>
-          <FormGroup>
-            <Label>Audience:</Label>
-            <Input type="text" name="audience" />
-          </FormGroup>
-          <FormGroup>
-            <Label>Requirements:</Label>
-            <TextArea name="requirements" rows="4" />
-          </FormGroup>
-          <Button type="submit">Submit</Button>
-        </form>
+        <FormGroup>
+          <Label>Date:</Label>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setdate(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Start Time:</Label>
+          <Input
+            type="time"
+            value={start_time}
+            onChange={(e) => setstart_time(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>End Time:</Label>
+          <Input
+            type="time"
+            value={end_time}
+            onChange={(e) => setend_time(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Title:</Label>
+          <Input
+            type="text"
+            value={title}
+            onChange={(e) => settitle(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Reason:</Label>
+          <Input
+            type="text"
+            value={reason}
+            onChange={(e) => setreason(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Venue:</Label>
+          <Select
+            value={venue}
+            onChange={(e) => setvenue(e.target.value)}
+            required
+          >
+            <option value="">Select Venue</option>
+            <option value="Cogni">Cognizant Lab</option>
+            <option value="Main Auditorium">Main Auditorium</option>
+            <option value="Mini Auditorium">Mini Auditorium</option>
+            <option value="Hostel Ground">Hostel Ground</option>
+            {/* Add more options as needed */}
+          </Select>
+        </FormGroup>
+        <FormGroup>
+          <Label>Audience:</Label>
+          <Select
+            value={venue}
+            onChange={(e) => setaudience(e.target.value)}
+            required
+          >
+            <option value="">Select Audience</option>
+            <option value="College students">College students</option>
+            <option value="Outside college">Outside college</option>
+            <option value="Both college and outsiders">
+              Both college and outsiders
+            </option>
+            {/* Add more options as needed */}
+          </Select>
+        </FormGroup>
+        <FormGroup>
+          <Label>Requirements:</Label>
+          <TextArea
+            //   name="requirements"
+            rows="4"
+            value={requirements}
+            onChange={(e) => setrequirements(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <Button onClick={handle_req_submit} type="submit">
+          Submit
+        </Button>
       </FormContainer>
-      </Container>
-    );
-  }
+    </Container>
+  );
+}
 
-
-  const Container = styled.div`
+const Container = styled.div`
   min-height: 100vh;
   /* min-width: 150vw; */
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #1a202c;
+  background-color: black;
+  margin-top:1rem;
+  margin-bottom:1rem;
 `;
 
-  const FormContainer = styled.div`
+const FormContainer = styled.div`
   max-width: 500px;
   min-width: 500px;
   /* display: flex;
@@ -146,6 +283,16 @@ const Button = styled.button`
   }
 `;
 
+const Select = styled.select`
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #4a5568;
+  color: #fff;
+`;
+
 // const VenueListButton = styled.button`
 //     margin: 50px;
 //     width: 250px;
@@ -164,4 +311,4 @@ const Button = styled.button`
 //     color: black;
 // `
 
-export default ActForm
+export default ActForm;
