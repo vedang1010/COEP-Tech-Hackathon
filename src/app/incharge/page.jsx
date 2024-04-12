@@ -66,7 +66,7 @@ const IndexPage = () => {
         const newData = [];
         for (const userId in requests) {
           const userData = requests[userId];
-          if (userData.status === tab) {
+          if (userData.status === tab && userData.Facultystatus=="accepted") {
             console.log(Object.values(userData))
             newData.push(userData);
           }
