@@ -10,7 +10,7 @@ import Navbar from './Navbar';
 const Layout = ({ children }) => {
     return (
         <LayoutWrapper>
-            <Navbar></Navbar>
+            <Navbar />
             {children}
         </LayoutWrapper>
     )
