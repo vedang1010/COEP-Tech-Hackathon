@@ -121,7 +121,7 @@ const CalendarGfg = () => {
         const newData = [];
         for (const userId in venue) {
           const userData = venue[userId];
-          if (userData.date === date) {
+          if (userData.date === date && userData.status==="accepted") {
             newData.push(userData);
           }
         }
