@@ -1,9 +1,11 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import app from "../config/config"
 
+import { getDatabase, ref, onValue } from "firebase/database";
 const CalendarContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -34,6 +36,28 @@ const CalendarGfg = () => {
   const [value, onChange] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [listData, setListData] = useState([]);
+  const database = getDatabase(app);
+
+
+useEffect(() => {
+  console.log("hello")
+  // console.log(database)
+  const rootRef = ref(database, "Venue");
+  onValue(rootRef, (snapshot) => {
+    const venue = snapshot.val();
+    // console.log(venue)
+    // const updatedWebsites = [];
+
+    for (const userId in venue) {
+      const userData = venue[userId];
+      console.log(userData.id1.date)
+    }
+
+    // setWebsites(updatedWebsites);
+  });
+
+}, [database]);
+
 
   // Dummy data for demonstration
   const dataForDate = {
