@@ -60,7 +60,8 @@ function ActForm() {
                 requirements:requirements,
                 Facultystatus:'pending',
                 status:'pending',
-                club:club
+                club:club,
+                id:idd
             });
 
 
