@@ -38,34 +38,7 @@ const CalendarGfg = () => {
   const [listData, setListData] = useState([]);
   const database = getDatabase(app);
 
-  useEffect(() => {
-    const fetchDataForDate = (date) => {
-      const rootRef = ref(database, "Requests");
-      onValue(rootRef, (snapshot) => {
-        const venue = snapshot.val();
-        for (const userId in venue) {
-          const userData = venue[userId];
-          if (userData.date == selectedDate) {
-            console.log(userData)
-            listData.push(userData)
-          }
-        }
-        setListData(listData)
-      });
-    };
 
-    if (selectedDate) {
-      fetchDataForDate(selectedDate);
-    }
-  }, [database, selectedDate]);
-
-  const handleDateClick = (date) => {
-    const formattedDate = date.toISOString().split('T')[0];
-    console.log(formattedDate)
-    // console.log("FFF",date)
-    setSelectedDate(formattedDate);
-
-  };
   // Dummy data for demonstration
   const dataForDate = {
 
