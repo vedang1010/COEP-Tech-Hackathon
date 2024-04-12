@@ -17,12 +17,13 @@ import styled from "styled-components";
 const Select = styled.select`
   width: 50%;
   margin: 4rem auto 1rem 26vw;
-  padding: 0.75rem;
+  padding: 1rem;
   background-color: #F2A379;
   border: none;
   border-radius: 4px;
-  color: #fff;
+  color: #000;
   outline: none;
+  font-size: medium;
 `;
 
 const Option = styled.option`
