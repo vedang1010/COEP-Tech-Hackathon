@@ -76,7 +76,12 @@ function ActForm() {
                 venue:venue,
                 audience:audience,
                 requirements:requirements,
-                status:'pending'
+                status:'pending',
+                Facultystatus:'pending',
+                facRemark:'',
+                inchargeRemark:''
+
+
             });
 
       console.log("Creating channel now entering");
