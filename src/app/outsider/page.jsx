@@ -1,11 +1,12 @@
-'use client';
+'use client'
 import { useEffect, useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth, db } from '../config/config'; // Assuming db is your Firebase database instance
+import { auth, db } from '../config/config';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { ref, set, getDatabase, onValue } from 'firebase/database';
-// Import `ref` and `set` from the Firebase Realtime Database module
+
+import { get } from 'firebase/database';
 const Container = styled.div`
   min-height: 100vh;
   display: flex;
@@ -54,64 +55,95 @@ const Button = styled.button`
 `;
 
 const SignUpPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
-    const router = useRouter();
+  const [error, setError] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [clubName, setClubName] = useState('');
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
+  const router = useRouter();
+  const handleSignUp = async () => {
+    try {
+      if (!email || !password || !clubName) {
+        console.log("incompelte");
+        setError("Please fill in all fields.");
+        return;
+      }
+  
+      const res = await createUserWithEmailAndPassword(email, password);
+      if (!res) {
+        console.log("sign up failed");
 
-    const selectedPosition = "Outsider";
+        setError("Sign up failed. Please try again.");
+        return;
+      }
 
-    const handleSignUp = async () => {
-        try {
-          const res = await createUserWithEmailAndPassword(email, password);
-          console.log({ res });
-          sessionStorage.setItem('user', true);
-          setEmail('');
-          setPassword('');
-          var idd = res.user.uid;
-          console.log(idd);
-          if (selectedPosition) {
-            const database = getDatabase(); 
+      console.log("created entry ",res);
+  
+      sessionStorage.setItem('user', true);
+      setEmail('');
+      setPassword('');
+      setClubName('');
       
-            const reference = ref(database, `Users`);
-            console.log(reference);
-            const reference2 = ref(database, `Users/` + idd);
+      // var endpoint
+      const database = getDatabase();
+      console.log("adding entry in users table",`Users/${res.user.uid}`);
+      // Create entry in Users table
+      const userRef = ref(database, `Users/${res.user.uid}`);
 
-            console.log(reference2);
+      await set(userRef, {
+        email: email,
+        position: 'Outsider',
+      });
 
-            set(reference2, {
-              position: selectedPosition,
-            });
-          }
+      console.log("added entry in users table",`Users/${res.user.uid}`);
       
-          router.push('/sign-in');
-        } catch (e) {
-          console.error(e);
-        }
-      };
-      
-    return (
-        <Container>
-            <SignUpForm>
-                <Title>Outsider</Title>
-                <Input
-                    type="email"
-                    placeholder="Email"
-                    autoComplete="off"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <Input
-                    type="password"
-                    placeholder="Password"
-                    autoComplete="off"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <Button onClick={handleSignUp}>Sign Up</Button>
-            </SignUpForm>
-        </Container>
-    );
+      // Create entry in Outsider table
+      const clubRef = ref(database, `outsider/${clubName}`);
+      await set(clubRef, {
+        email: email,
+        advisor: 'vc@gmail.com',
+        name: clubName,
+        // id: email,
+      });
+  
+      router.push('/sign-in');
+    } 
+    catch (e) {
+      console.log("intial error");
+      console.error(e);
+      setError("Sign up failed. Please try again.");
+    }
+  };
+  
+  return (
+    <Container>
+      <SignUpForm>
+        <Title>Sign Up</Title>
+        <Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          autoComplete="off"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          autoComplete="off"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Input
+          type="text"
+          placeholder="Club Name"
+          value={clubName}
+          autoComplete="off"
+          onChange={(e) => setClubName(e.target.value)}
+        />
+        <Button onClick={handleSignUp}>Sign Up</Button>
+      </SignUpForm>
+    </Container>
+  );
 };
 
 export default SignUpPage;

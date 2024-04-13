@@ -1,15 +1,27 @@
 "use client";
 // import React from 'react'
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { styled } from "styled-components";
 // import BookingList from "./VenueList"
 import Cookies from "js-cookie";
+import {} from '../src/app/config/config'
 import { useRouter } from "next/navigation";
 import { getAuth, signOut } from "firebase/auth";
-const Navbar = () => {
+import dynamic from 'next/dynamic'
+
+const Navbar = ({ user }) => {
+
+  const router = useRouter();
+  useEffect(() => {
+    const userSession = sessionStorage.getItem("user");
+    if (!user && !userSession) {
+      router.push("/sign-in");
+    }
+  }, [user, router]);
+
   const position = Cookies.get("position") || null;
   console.log(position)
-  const router = useRouter();
+  // const router = useRouter();
   const [displayReq, setDisplayReq] = useState(true); // Boolean state variable
 const auth=getAuth()
   const handlePageChange = () => {
@@ -46,12 +58,12 @@ const auth=getAuth()
       <VenueListButton onClick={handleHomeChange}>Home</VenueListButton>
 
 
-      <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
+      {/* <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
       <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
       <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
+ */}
 
-
-      {/* {
+      {
          typeof window !== 'undefined' &&
         (position === "Venue In Charge" ? (
           <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
@@ -60,7 +72,7 @@ const auth=getAuth()
         ) : (
           <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
         ))
-      } */}
+      }
       <VenueListButton onClick={handlePageChange}>Venue</VenueListButton>
       <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
     </NavbarContainer>
@@ -107,4 +119,5 @@ const LogoutButton = styled.button`
     background-color: #ff7875;
   }
 `;
-export default Navbar;
+// export default Navbar;
+export default dynamic(()=>Promise.resolve(Navbar),{ssr:false});

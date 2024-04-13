@@ -1,11 +1,13 @@
 "use client"
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {app} from "../config/config"
+import { app } from "../config/config"
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import Layout from '../../../components/Layout';
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from "next/navigation";
+import dynamic from 'next/dynamic'
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -24,6 +26,21 @@ const TabButton = styled.button`
 `;
 
 const IndexPage = () => {
+
+  const router = useRouter();
+
+  // Retrieve position from cookies, default to null
+  // const position = Cookies.get("position") || null;
+
+  useEffect(() => {
+    const userSession = sessionStorage.getItem("user");
+    if (!user && !userSession) {
+      router.push("/sign-in");
+    }
+  }, [user, router]);
+
+
+
   const [activeTab, setActiveTab] = useState('pending'); // Default tab
   const [Pdata, setPData] = useState([]);
   const [Cdata, setCData] = useState([]);
@@ -31,6 +48,16 @@ const IndexPage = () => {
   const database = getDatabase(app);
   const auth = getAuth();
   const [user] = useAuthState(auth);
+
+  // const router = useRouter();
+  useEffect(() => {
+    const userSession = sessionStorage.getItem("user");
+    if (!user && !userSession) {
+      router.push("/sign-in");
+    }
+  }, [user, router]);
+
+
   useEffect(() => {
     fetchData();
   }, [activeTab]);
@@ -61,29 +88,31 @@ const IndexPage = () => {
 
   }
 
-
   const fetchData = async (tab) => {
     try {
 
-
       const rootRef2 = ref(database, "Clubs");
-        var club=""
-        onValue(rootRef2, (snapshot) => {
-          const request = snapshot.val();
-          const newData = [];
-          for (const userId in request) {
-            const userData = request[userId];
-            // console.log(userData)
+      var club = ""
+      onValue(rootRef2, (snapshot) => {
+        const request = snapshot.val();
+        const newData = [];
+        for (const userId in request) {
+          const userData = request[userId];
+          // console.log(userData)
+          if (user) {
+
+
             console.log(user.email)
             if (userData.email === user.email) {
               console.log(userData.name)
-              club=userData.name;
+              club = userData.name;
 
               newData.push(userData);
             }
           }
-          // setListData(newData);
-        });
+        }
+        // setListData(newData);
+      });
       // console.log("REach")
       const rootRef = ref(database, "Requests");
       onValue(rootRef, (snapshot) => {
@@ -94,20 +123,20 @@ const IndexPage = () => {
         for (const userId in requests) {
           const userData = requests[userId];
           // console.log(userData)
-          if(userData.club===club){
-          if (userData.status === "pending" || userData.Facultystatus=="pending") {
-            console.log(Object.values(userData))
-            newPData.push(userData);
+          if (userData.club === club) {
+            if (userData.status === "pending" || userData.Facultystatus == "pending") {
+              console.log(Object.values(userData))
+              newPData.push(userData);
+            }
+            if (userData.status === "accepted" && userData.Facultystatus == "accepted") {
+              console.log(Object.values(userData))
+              newAData.push(userData);
+            }
+            if (userData.status === "cancelled" || userData.Facultystatus == "cancelled") {
+              console.log(Object.values(userData))
+              newCData.push(userData);
+            }
           }
-          if (userData.status === "accepted" && userData.Facultystatus=="accepted") {
-            console.log(Object.values(userData))
-            newAData.push(userData);
-          }
-          if (userData.status === "cancelled" || userData.Facultystatus=="cancelled") {
-            console.log(Object.values(userData))
-            newCData.push(userData);
-          }
-        }
         }
         setPData(newPData); // Update state with new data
         setCData(newCData); // Update state with new data
@@ -197,4 +226,5 @@ const IndexPage = () => {
   );
 };
 
-export default IndexPage;
+// export default IndexPage;
+export default dynamic(() => Promise.resolve(IndexPage), { ssr: false });

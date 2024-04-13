@@ -7,7 +7,10 @@ import { ref, set, getDatabase, onValue } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
+import Cookies from "js-cookie";
 function ActForm() {
+
+    const position = Cookies.get("position") || null;
     const [date, setdate] = useState('');
     const [start_time,setstart_time] = useState('');
     const [end_time, setend_time] = useState('');
@@ -39,11 +42,7 @@ function ActForm() {
         set(channelRef, {
           clubEmail,
           facultyAdvisorEmail,
-          venueInchargeEmail,
-          // members: {
-          //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
-          //   [venueInchargeEmail]: true, // Set venue incharge as a member
-          // },
+          venueInchargeEmail
         })
           .then(() => {
             console.log("Channel created successfully.");
@@ -62,48 +61,77 @@ function ActForm() {
 
         var idd = date+start_time+end_time;
         const database = getDatabase(app); 
-        const rootRef = ref(database, "Clubs");
-        var club=""
-        onValue(rootRef, (snapshot) => {
-          const request = snapshot.val();
-          const newData = [];
-          for (const userId in request) {
-            const userData = request[userId];
-            // console.log(userData)
-            if (userData.email === user.email) {
-              console.log(userData.name)
-              club=userData.name;
+        if(position == "Outsider"){
+          console.log("outsider detected");
+          const rootRef = ref(database, "outsider");
+          var club="";
 
-              newData.push(userData);
+          onValue(rootRef, (snapshot) => {
+            const request = snapshot.val();
+            const newData = [];
+            for (const userId in request) {
+              const userData = request[userId];
+
+              console.log(userData)
+              if (userData.email === user.email) {
+                club=userData.name;
+                console.log(userData.name);
+                const clubEmail=userData.email;
+                console.log(userData.email);
+
+                const facultyAdvisorEmail = userData.advisor;
+                newData.push(userData);
+                console.log(`${club}, ${clubEmail}, ${facultyAdvisorEmail}`);
+                break;
+              }
             }
-          }
-          // setListData(newData);
-        });
-            const reference = ref(database, "Requests");
+
+
+          });
+        }
+        else{
+          const rootRef = ref(database, "Clubs");
+          var club=""
+          
+          onValue(rootRef, (snapshot) => {
+            const request = snapshot.val();
+            const newData = [];
+            for (const userId in request) {
+              const userData = request[userId];
+              // console.log(userData)
+              if (userData.email === user.email) {
+                console.log(userData.name)
+                club=userData.name;
+  
+                newData.push(userData);
+              }
+            }
+            // setListData(newData);
+          });
+        }
+        const reference = ref(database, "Requests");
            
-            // console.log(reference);
-            const reference2 = ref(database, "Requests/" + idd);
+        // console.log(reference);
+        const reference2 = ref(database, "Requests/" + idd);
 
-      
-
-            set(reference2, {
-                date: date,
-                start_time:start_time,
-                end_time: end_time,
-                title:title,
-                reason:reason,
-                venue:venue,
-                audience:audience,
-                requirements:requirements,
-                status:'pending',
-                Facultystatus:'pending',
-                facRemark:'',
-                inchargeRemark:'',
-                club:club,
-                id:idd
+        set(reference2, {
+            date: date,
+            start_time:start_time,
+            end_time: end_time,
+            title:title,
+            reason:reason,
+            venue:venue,
+            audience:audience,
+            requirements:requirements,
+            status:'pending',
+            Facultystatus:'pending',
+            facRemark:'',
+            inchargeRemark:'',
+            club:club,
+            id:idd
 
 
-            });
+        });
       toast.success("Request Sent Successfully");
       console.log("Creating channel now entering");
       createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
@@ -172,7 +200,7 @@ function ActForm() {
             <option value="Main Auditorium">Main Auditorium</option>
             <option value="Mini Auditorium">Mini Auditorium</option>
             <option value="Hostel Ground">Hostel Ground</option>
-            {/* Add more options as needed */}
+            
           </Select>
         </FormGroup>
         <FormGroup>
