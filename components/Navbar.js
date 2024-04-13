@@ -53,10 +53,6 @@ const Navbar = () => {
       <VenueListButton >Welcome {user.email}</VenueListButton>
       <VenueListButton onClick={handleHomeChange}>Home</VenueListButton>
 
-{/* 
-      <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
-      <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
-      <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton> */}
 
 
       {
