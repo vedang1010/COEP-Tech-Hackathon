@@ -20,6 +20,8 @@ const getCurrentDate = () => {
 };
 
 function ActForm() {
+
+    // const position = Cookies.get("position") || null;
     const [date, setdate] = useState('');
     const [start_time,setstart_time] = useState('');
     const [end_time, setend_time] = useState('');
@@ -100,11 +102,7 @@ function ActForm() {
     //     set(channelRef, {
     //       clubEmail,
     //       facultyAdvisorEmail,
-    //       venueInchargeEmail,
-    //       // members: {
-    //       //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
-    //       //   [venueInchargeEmail]: true, // Set venue incharge as a member
-    //       // },
+    //       venueInchargeEmail
     //     })
     //       .then(() => {
     //         console.log("Channel created successfully.");
@@ -130,58 +128,80 @@ function ActForm() {
         }
         // var idd = date+start_time+end_time;
         const database = getDatabase(app); 
-        const rootRef = ref(database, "Clubs");
-        var club=""
-        onValue(rootRef, (snapshot) => {
-          const request = snapshot.val();
-          const newData = [];
-          for (const userId in request) {
-            const userData = request[userId];
-        console.log(user.email)
-            if (userData.advisor === user.email) {
-              console.log(userData.name)
-              club=userData.name;
-              // setClub(userData.name);
+        if(position == "Outsider"){
+          console.log("outsider detected");
+          const rootRef = ref(database, "outsider");
+          var club="";
 
-              console.log("clubbb name iss")
-              console.log(club);
+          onValue(rootRef, (snapshot) => {
+            const request = snapshot.val();
+            const newData = [];
+            for (const userId in request) {
+              const userData = request[userId];
 
-              newData.push(userData); 
-              // console.log(userData.name)
-              // setClub(userData.name);
-              // console.log(club)
+              console.log(userData)
+              if (userData.email === user.email) {
+                club=userData.name;
+                console.log(userData.name);
+                const clubEmail=userData.email;
+                console.log(userData.email);
+
+                const facultyAdvisorEmail = userData.advisor;
+                newData.push(userData);
+                console.log(`${club}, ${clubEmail}, ${facultyAdvisorEmail}`);
+                break;
+              }
             }
-          }
-          // setListData(newData);
-        });
-            var idd = date+start_time+end_time+club;
 
-            const reference = ref(database, "Requests");
+
+          });
+        }
+        else{
+          const rootRef = ref(database, "Clubs");
+          var club=""
+          
+          onValue(rootRef, (snapshot) => {
+            const request = snapshot.val();
+            const newData = [];
+            for (const userId in request) {
+              const userData = request[userId];
+              // console.log(userData)
+              if (userData.email === user.email) {
+                console.log(userData.name)
+                club=userData.name;
+  
+                newData.push(userData);
+              }
+            }
+            // setListData(newData);
+          });
+        }
+        const reference = ref(database, "Requests");
            
-            // console.log(reference);
-            const reference2 = ref(database, "Requests/" + idd);
+        // console.log(reference);
+        const reference2 = ref(database, "Requests/" + idd);
 
-      
+        set(reference2, {
+            date: date,
+            start_time:start_time,
+            end_time: end_time,
+            title:title,
+            reason:reason,
+            venue:venue,
+            audience:audience,
+            requirements:requirements,
+            status:'pending',
+            Facultystatus:'pending',
+            facRemark:'',
+            inchargeRemark:'',
+            club:club,
+            id:idd
 
-            set(reference2, {
-                date: date,
-                start_time:start_time,
-                end_time: end_time,
-                title:title,
-                reason:reason,
-                venue:venue,
-                audience:audience,
-                requirements:requirements,
-                status:'pending',
-                Facultystatus:'pending',
-                facRemark:'',
-                inchargeRemark:'',
-                club:club,
-                id:idd
-            });
+
+        });
       toast.success("Request Sent Successfully");
-      // console.log("Creating channel now entering");
-      // createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
+      console.log("Creating channel now entering");
+      createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
     } catch (e) {
       console.error(e);
     }
@@ -196,8 +216,7 @@ function ActForm() {
             type="date"
             value={date}
             onChange={(e) => setdate(e.target.value)}
-            min={getCurrentDate()}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -206,7 +225,7 @@ function ActForm() {
             type="time"
             value={start_time}
             onChange={(e) => setstart_time(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -215,7 +234,7 @@ function ActForm() {
             type="time"
             value={end_time}
             onChange={(e) => setend_time(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -224,7 +243,7 @@ function ActForm() {
             type="text"
             value={title}
             onChange={(e) => settitle(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -233,7 +252,7 @@ function ActForm() {
             type="text"
             value={reason}
             onChange={(e) => setreason(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -241,22 +260,22 @@ function ActForm() {
           <Select
             value={venue}
             onChange={(e) => setvenue(e.target.value)}
-            required
+            
           >
             <option value="">Select Venue</option>
-            <option value="Cognizant Lab">Cognizant Lab</option>
+            <option value="Cogni">Cognizant Lab</option>
             <option value="Main Auditorium">Main Auditorium</option>
             <option value="Mini Auditorium">Mini Auditorium</option>
             <option value="Hostel Ground">Hostel Ground</option>
-            {/* Add more options as needed */}
+            
           </Select>
         </FormGroup>
         <FormGroup>
           <Label>Audience:</Label>
           <Select
-            value={audience}
+            value={venue}
             onChange={(e) => setaudience(e.target.value)}
-            required
+            
           >
             <option value="">Select Audience</option>
             <option value="College students">College students</option>
@@ -346,10 +365,6 @@ const Input = styled.input`
   border: none;
   background-color: #4a5568;
   color: #fff;
-
-  &[type="date"] {
-    min: ${getCurrentDate()};
-  }
 `;
 
 const TextArea = styled.textarea`
