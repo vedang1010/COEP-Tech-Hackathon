@@ -7,10 +7,21 @@ import { ref, set, getDatabase, onValue } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
-import Cookies from "js-cookie";
+
+
+const getCurrentDate = () => {
+  const today = new Date();
+  today.setDate(today.getDate() + 3); 
+  const year = today.getFullYear();
+  let month = (today.getMonth() + 1).toString().padStart(2, '0');
+  let day = today.getDate().toString().padStart(2, '0');
+  
+  return `${year}-${month}-${day}`;
+};
+
 function ActForm() {
 
-    const position = Cookies.get("position") || null;
+    // const position = Cookies.get("position") || null;
     const [date, setdate] = useState('');
     const [start_time,setstart_time] = useState('');
     const [end_time, setend_time] = useState('');
@@ -21,45 +32,101 @@ function ActForm() {
     const [requirements, setrequirements] = useState('');
     const auth = getAuth();
     const [user] = useAuthState(auth);
-    const createChannel = (
-      clubEmail,
-      facultyAdvisorEmail,
-      venueInchargeEmail
-    ) => {
-      try {
-        console.log("Creating channel now inside enters");
-        console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
-        const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
-        const channelKey = temp.replace(/[.@_]/g, '');
-        console.log("new keyyyy "+ channelKey)
-        // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
-        const database = getDatabase(app);
-        console.log("kahskfj Channels/" + channelKey);
-        const channelRef = ref(database, `Channels/${channelKey}`);
-        console.log("Channel ref:", channelRef);
-        console.log("Channel key:", channelKey);
-  
-        set(channelRef, {
-          clubEmail,
-          facultyAdvisorEmail,
-          venueInchargeEmail
-        })
-          .then(() => {
-            console.log("Channel created successfully.");
-          })
-          .catch((error) => {
-            console.error("Error creating channel:", error);
+    const [acceptedItems, setAcceptedItems] = useState([]);
+    const [error, setError] = useState('');
+
+    
+    useEffect(() => {
+      const fetchAcceptedItems = async () => {
+        try {
+          const database = getDatabase(app); 
+          const rootRef = ref(database, "Requests");
+          onValue(rootRef, (snapshot) => {
+            const requests = snapshot.val();
+            const acceptedItemsArray = [];
+            for (const requestId in requests) {
+              const request = requests[requestId];
+              if (request.status === 'accepted') {
+                acceptedItemsArray.push(request);
+              }
+            }
+            setAcceptedItems(acceptedItemsArray);
           });
-      } catch (error) {
-        console.error("Error creating channel:", error);
-      }
-    };
+        } catch (error) {
+          console.error('Error fetching accepted items:', error);
+        }
+      };
+      fetchAcceptedItems();
+    }, []);
+
+    function checkAvailability(startTime,endTime,date,venue){
+        for(const item of acceptedItems){
+            if(venue === item.venue && date === item.date){
+              const userStartDate = new Date(`2000-01-01T${startTime}`);
+              const userEndDate = new Date(`2000-01-01T${endTime}`);
+              const acceptedStartDate = new Date(`2000-01-01T${item.start_time}`);
+              const acceptedEndDate = new Date(`2000-01-01T${item.end_time}`);
+              
+                  if (
+                      (userStartDate >= acceptedStartDate && userStartDate < acceptedEndDate) ||
+                      (userEndDate > acceptedStartDate && userEndDate <= acceptedEndDate) ||
+                      (userStartDate <= acceptedStartDate && userEndDate >= acceptedEndDate)
+                    ) {
+                      return false;
+                    }
+            }
+        }
+        return true;
+    }
+
+    
+    // const[club,setClub]=useState('')
+    // const createChannel = (
+    //   clubEmail,
+    //   facultyAdvisorEmail,
+    //   venueInchargeEmail
+    // ) => {
+    //   try {
+    //     console.log("Creating channel now inside enters");
+    //     console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
+    //     const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+    //     const channelKey = temp.replace(/[.@_]/g, '');
+    //     console.log("new keyyyy "+ channelKey)
+    //     // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+    //     const database = getDatabase(app);
+    //     console.log("kahskfj Channels/" + channelKey);
+    //     const channelRef = ref(database, `Channels/${channelKey}`);
+    //     console.log("Channel ref:", channelRef);
+    //     console.log("Channel key:", channelKey);
+  
+    //     set(channelRef, {
+    //       clubEmail,
+    //       facultyAdvisorEmail,
+    //       venueInchargeEmail
+    //     })
+    //       .then(() => {
+    //         console.log("Channel created successfully.");
+    //       })
+    //       .catch((error) => {
+    //         console.error("Error creating channel:", error);
+    //       });
+    //   } catch (error) {
+    //     console.error("Error creating channel:", error);
+    //   }
+    // };
     const handle_req_submit = () => {
         try {
-        console.log(date);
-        console.log(start_time);
-
-        var idd = date+start_time+end_time;
+        // console.log(date);
+        // console.log(start_time);
+        const isAvailable = checkAvailability(start_time, end_time,date,venue);
+        if (!isAvailable) {
+            setError('Selected time slot is not available. Please choose another time.');
+            console.log("error")
+            // toast.success("Request Sent Successfully");
+            toast.error("Selected time slot is not available. Please choose another time.");
+            return; // Exit the function early if time slot is not available
+        }
+        // var idd = date+start_time+end_time;
         const database = getDatabase(app); 
         if(position == "Outsider"){
           console.log("outsider detected");
