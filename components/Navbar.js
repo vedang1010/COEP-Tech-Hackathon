@@ -18,6 +18,12 @@ const Navbar = () => {
   const handleDisplayChange = () => {
     router.push("/request");
   };
+  const handleDisplayIncharge = () => {
+    router.push("/incharge");
+  };
+  const handleDisplayFaculty = () => {
+    router.push("/facultyAdvisor");
+  };
   const handleHomeChange = () => {
     router.push("/home");
   };
@@ -38,7 +44,23 @@ const Navbar = () => {
     <NavbarContainer>
         
       <VenueListButton onClick={handleHomeChange}>Home</VenueListButton>
-      {position === "Venue In Charge"? <VenueListButton onClick={handleDisplayChange}>Pending Requestes </VenueListButton>:<VenueListButton onClick={handleDisplayChange}>Request </VenueListButton>}
+
+
+      <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
+      <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
+      <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
+
+
+      {/* {
+         typeof window !== 'undefined' &&
+        (position === "Venue In Charge" ? (
+          <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
+        ) : position === "Faculty Advisor" ? (
+          <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
+        ) : (
+          <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
+        ))
+      } */}
       <VenueListButton onClick={handlePageChange}>Venue</VenueListButton>
       <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
     </NavbarContainer>

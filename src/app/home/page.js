@@ -44,7 +44,7 @@ const home = () => {
     <Layout>
     <CalendarGfg/>
     {/* {displayRequest?<CalendarGfg/>: <ActForm/>} */}
-    <Remarks />
+    {/* <Remarks /> */}
     </Layout>
     
     // {/* </> */}
