@@ -81,8 +81,8 @@ function ActForm() {
           const newData = [];
           for (const userId in request) {
             const userData = request[userId];
-        
-            if (userData.email === user.email) {
+        console.log(user.email)
+            if (userData.advisor === user.email) {
               console.log(userData.name)
               club=userData.name;
               // setClub(userData.name);
@@ -188,7 +188,7 @@ function ActForm() {
             required
           >
             <option value="">Select Venue</option>
-            <option value="Cogni">Cognizant Lab</option>
+            <option value="Cognizant Lab">Cognizant Lab</option>
             <option value="Main Auditorium">Main Auditorium</option>
             <option value="Mini Auditorium">Mini Auditorium</option>
             <option value="Hostel Ground">Hostel Ground</option>

@@ -1,6 +1,6 @@
 "use client";
 // import React from 'react'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 // import BookingList from "./VenueList"
 import Cookies from "js-cookie";
@@ -8,16 +8,21 @@ import { useRouter } from "next/navigation";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 const Navbar = () => {
-  const position = Cookies.get("position") || null;
-  console.log(position)
-  const router = useRouter();
-
-  const [displayReq, setDisplayReq] = useState(true); // Boolean state variable
   const auth = getAuth();
   const [user] = useAuthState(auth);
-  if (!user) {
-    router.push("/sign-in")
-  }
+  const router = useRouter();
+  // useEffect(() => {
+  // 
+    // if (!user) {
+    //   router.push("/sign-in")
+    //   return <div>Please sign in to continue</div>;
+    // }
+  // })
+  const position = Cookies.get("position") || null;
+  console.log(position)
+
+  const [displayReq, setDisplayReq] = useState(true); // Boolean state variable
+
   const handlePageChange = () => {
     router.push("/venuelist");
   };
@@ -32,6 +37,9 @@ const Navbar = () => {
   };
   const handleHomeChange = () => {
     router.push("/home");
+  };
+  const handleClubChange = () => {
+    router.push("/clubs");
   };
   const handleSignOut = () => {
     signOut(auth)
@@ -49,7 +57,7 @@ const Navbar = () => {
   return (
     <NavbarContainer>
 
-      <VenueListButton >Welcome {user.email}</VenueListButton>
+      {/* <VenueListButton >Welcome {user.email}</VenueListButton> */}
       <VenueListButton onClick={handleHomeChange}>Home</VenueListButton>
 
       {/* 
@@ -64,7 +72,9 @@ const Navbar = () => {
           <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
         ) : position === "Faculty Advisor" ? (
           <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
-        ) : (
+        ) : position==="Club Member"?(
+          <VenueListButton onClick={handleClubChange}>View</VenueListButton>
+        ):(
           <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
         ))
       }
