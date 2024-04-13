@@ -7,6 +7,17 @@ import { ref, set, getDatabase, onValue } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
+
+const getCurrentDate = () => {
+  const today = new Date();
+  today.setDate(today.getDate() + 3); 
+  const year = today.getFullYear();
+  let month = (today.getMonth() + 1).toString().padStart(2, '0');
+  let day = today.getDate().toString().padStart(2, '0');
+  
+  return `${year}-${month}-${day}`;
+};
+
 function ActForm() {
     const [date, setdate] = useState('');
     const [start_time,setstart_time] = useState('');
@@ -18,6 +29,8 @@ function ActForm() {
     const [requirements, setrequirements] = useState('');
     const auth = getAuth();
     const [user] = useAuthState(auth);
+
+    
     const createChannel = (
       clubEmail,
       facultyAdvisorEmail,
@@ -29,7 +42,6 @@ function ActForm() {
         const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
         const channelKey = temp.replace(/[.@_]/g, '');
         console.log("new keyyyy "+ channelKey)
-        // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
         const database = getDatabase(app);
         console.log("kahskfj Channels/" + channelKey);
         const channelRef = ref(database, `Channels/${channelKey}`);
@@ -60,7 +72,7 @@ function ActForm() {
         console.log(date);
         console.log(start_time);
 
-        var idd = date+start_time+end_time;
+        // var idd = date+start_time+end_time;
         const database = getDatabase(app); 
         const rootRef = ref(database, "Clubs");
         var club=""
@@ -81,6 +93,8 @@ function ActForm() {
           }
           // setListData(newData);
         });
+            var idd = date+start_time+end_time+club;
+
             const reference = ref(database, "Requests");
            
             // console.log(reference);
@@ -123,7 +137,8 @@ function ActForm() {
             type="date"
             value={date}
             onChange={(e) => setdate(e.target.value)}
-            
+            min={getCurrentDate()}
+            required
           />
         </FormGroup>
         <FormGroup>
@@ -132,7 +147,7 @@ function ActForm() {
             type="time"
             value={start_time}
             onChange={(e) => setstart_time(e.target.value)}
-            
+            required
           />
         </FormGroup>
         <FormGroup>
@@ -141,7 +156,7 @@ function ActForm() {
             type="time"
             value={end_time}
             onChange={(e) => setend_time(e.target.value)}
-            
+            required
           />
         </FormGroup>
         <FormGroup>
@@ -150,7 +165,7 @@ function ActForm() {
             type="text"
             value={title}
             onChange={(e) => settitle(e.target.value)}
-            
+            required
           />
         </FormGroup>
         <FormGroup>
@@ -159,7 +174,7 @@ function ActForm() {
             type="text"
             value={reason}
             onChange={(e) => setreason(e.target.value)}
-            
+            required
           />
         </FormGroup>
         <FormGroup>
@@ -167,7 +182,7 @@ function ActForm() {
           <Select
             value={venue}
             onChange={(e) => setvenue(e.target.value)}
-            
+            required
           >
             <option value="">Select Venue</option>
             <option value="Cogni">Cognizant Lab</option>
@@ -180,9 +195,9 @@ function ActForm() {
         <FormGroup>
           <Label>Audience:</Label>
           <Select
-            value={venue}
+            value={audience}
             onChange={(e) => setaudience(e.target.value)}
-            
+            required
           >
             <option value="">Select Audience</option>
             <option value="College students">College students</option>
@@ -272,6 +287,10 @@ const Input = styled.input`
   border: none;
   background-color: #4a5568;
   color: #fff;
+
+  &[type="date"] {
+    min: ${getCurrentDate()};
+  }
 `;
 
 const TextArea = styled.textarea`
