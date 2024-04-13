@@ -29,10 +29,7 @@ function ActForm() {
     const [requirements, setrequirements] = useState('');
     const auth = getAuth();
     const [user] = useAuthState(auth);
-
-    
-
-    const[club,setClub]=useState('')
+    // const[club,setClub]=useState('')
     // const createChannel = (
     //   clubEmail,
     //   facultyAdvisorEmail,
@@ -78,22 +75,24 @@ function ActForm() {
         // var idd = date+start_time+end_time;
         const database = getDatabase(app); 
         const rootRef = ref(database, "Clubs");
-        // var club=""
+        var club=""
         onValue(rootRef, (snapshot) => {
           const request = snapshot.val();
           const newData = [];
           for (const userId in request) {
             const userData = request[userId];
-        
-            if (userData.email === user.email) {
+        console.log(user.email)
+            if (userData.advisor === user.email) {
               console.log(userData.name)
               club=userData.name;
+              // setClub(userData.name);
+
               console.log("clubbb name iss")
               console.log(club);
 
               newData.push(userData); 
               // console.log(userData.name)
-              setClub(userData.name);
+              // setClub(userData.name);
               // console.log(club)
             }
           }
@@ -189,7 +188,7 @@ function ActForm() {
             required
           >
             <option value="">Select Venue</option>
-            <option value="Cogni">Cognizant Lab</option>
+            <option value="Cognizant Lab">Cognizant Lab</option>
             <option value="Main Auditorium">Main Auditorium</option>
             <option value="Mini Auditorium">Mini Auditorium</option>
             <option value="Hostel Ground">Hostel Ground</option>
