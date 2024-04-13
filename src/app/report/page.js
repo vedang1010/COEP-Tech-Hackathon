@@ -137,8 +137,10 @@
 
 "use client";
 import { useState, useEffect } from "react";
+import jsPDF from 'jspdf';
 import styled from "styled-components";
 import { getDatabase, ref, onValue } from "firebase/database";
+import autoTable from "jspdf-autotable";
 import app from "../config/config";
 import Navbar from "../../../components/Navbar";
 
@@ -199,6 +201,15 @@ border-top-right-radius:15px;
 
 const TableRow = styled.tr``;
 
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
 const TableCell = styled.td`
   padding: 10px;
   color:black;
@@ -206,6 +217,8 @@ const TableCell = styled.td`
 `;
 
 const Option = styled.option``;
+
+
 
 const Page = () => {
   const [venues, setVenues] = useState([]);
@@ -248,6 +261,29 @@ const Page = () => {
     fetchData();
   }, [database, selectedVenue]);
 
+  const generatePDF = () => {
+    // Create a new jsPDF instance
+    const doc = new jsPDF();
+  
+    // Set up the title for the PDF
+    doc.setFontSize(20);
+    doc.text('Venue Report', 10, 10);
+  
+    // Define the columns and rows for the table
+    const columns = ['Title', 'Club', 'Date', 'Start Time', 'End Time','Venue', 'Status'];
+    const data = requests.map(item => [item.title, item.club, item.date, item.start_time, item.end_time,item.venue, item.status]);
+  
+    // Add the table to the PDF
+    autoTable(doc,{
+      head: [columns],
+      body: data,
+      startY: 20,
+    });
+  
+    // Save or open the PDF
+    doc.save('venue_report.pdf');
+  };
+
   return (
     <>
       <Navbar />
@@ -263,11 +299,12 @@ const Page = () => {
             </Option>
           ))}
         </Select>
+        <Button onClick={generatePDF}>Download PDF</Button>
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
-              <TableTitle colSpan="6">Venue Report</TableTitle>
+              <TableTitle colSpan="7">Venue Report</TableTitle>
               </TableRow>
               <TableRow>
                 <TableCell>Title</TableCell>
@@ -275,6 +312,7 @@ const Page = () => {
                 <TableCell>Date</TableCell>
                 <TableCell>Start Time</TableCell>
                 <TableCell>End Time</TableCell>
+                <TableCell>Venue</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
@@ -286,6 +324,7 @@ const Page = () => {
                   <TableCell>{item.date}</TableCell>
                   <TableCell>{item.start_time}</TableCell>
                   <TableCell>{item.end_time}</TableCell>
+                  <TableCell>{item.venue}</TableCell>
                   <TableCell>{item.status}</TableCell>
                 </TableRow>
               ))}
