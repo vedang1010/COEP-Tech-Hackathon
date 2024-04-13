@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import app from "../config/config"
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import Navbar from '../../../components/Navbar'
-
+import { getAuth } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -72,7 +73,8 @@ const IndexPage = () => {
   const [data, setData] = useState([]);
   const [remarkText, setRemarkText] = useState({});
   const database = getDatabase(app);
-
+const auth=getAuth()
+const [user]=useAuthState(auth)
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -96,15 +98,40 @@ const IndexPage = () => {
   };
 
   useEffect(() => {
+    const rootRef2 = ref(database, "Clubs");
+    var club=""
+    onValue(rootRef2, (snapshot) => {
+      const request = snapshot.val();
+      const newData = [];
+      for (const userId in request) {
+        const userData = request[userId];
+        if (userData.advisor === user.email) {
+          console.log(userData.advisor)
+          console.log(userData.name)
+          club=userData.name;
+          // setClub(userData.name);
+
+          console.log("clubbb name iss")
+          console.log(club);
+
+          newData.push(userData); 
+          // console.log(userData.name)
+          // setClub(userData.name);
+          // console.log(club)
+        }
+      }
+      // setListData(newData);
+    });
     const fetchData = async () => {
       try {
+
         const rootRef = ref(database, "Requests");
         onValue(rootRef, (snapshot) => {
           const requests = snapshot.val();
           const newData = [];
           for (const userId in requests) {
             const userData = requests[userId];
-            if (userData.Facultystatus === activeTab) {
+            if (userData.Facultystatus === activeTab && userData.club===club) {
               newData.push({ ...userData, id: userId });
             }
           }

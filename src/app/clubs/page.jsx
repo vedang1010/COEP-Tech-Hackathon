@@ -134,6 +134,7 @@ const IndexPage = () => {
               {Pdata.map((item, index) => (
                 <div key={index}>
                   <h2>{item.title}</h2>
+                  <p>Date: {item.date}</p>
                   <p>Start Time: {item.start_time}</p>
                   <p>End Time: {item.end_time}</p>
                   <p>Club: {item.club}</p>
@@ -158,6 +159,8 @@ const IndexPage = () => {
               {Adata.map((item, index) => (
                 <div key={index}>
                   <h2>{item.title}</h2>
+                  <p>Date: {item.date}</p>
+
                   <p>Start Time: {item.start_time}</p>
                   <p>End Time: {item.end_time}</p>
                   <p>Club: {item.club}</p>
