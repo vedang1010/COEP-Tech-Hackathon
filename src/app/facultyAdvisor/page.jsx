@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import app from "../config/config"
 import { getDatabase, ref, onValue, set } from "firebase/database";
+import Navbar from '../../../components/Navbar'
+
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 const TabContainer = styled.div`
@@ -25,156 +27,83 @@ const TabButton = styled.button`
 const IndexPage = () => {
   const [activeTab, setActiveTab] = useState('pending'); // Default tab
   const [data, setData] = useState([]);
+  const [remarkText, setRemarkText] = useState({});
   const database = getDatabase(app);
   const auth = getAuth();
   const [user] = useAuthState(auth);
-  useEffect(() => {
-    fetchData();
-  }, [activeTab]);
+  
+  // useEffect(() => {
+  //   fetchData();
+  // }, [activeTab]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
-    // console.log(tab)
-    fetchData(tab); // Call fetchData whenever tab is changed
   };
+
   const handleApproval = async (id) => {
-    console.log(id)
-    // const reqRef = ref(database, "Requests/"+id+"/Facultystatus");
-    // const reqSnapshot = await get(reqRef);
-    // const reqData = reqSnapshot.val();
-    // const request = ;
-
     await set(ref(database, `Requests/${id}/Facultystatus`), 'accepted');
+  };
 
-  }
   const handleCancel = async (id) => {
-    console.log(id)
-    // const reqRef = ref(database, "Requests/"+id+"/Facultystatus");
-    // const reqSnapshot = await get(reqRef);
-    // const reqData = reqSnapshot.val();
-    // const request = ;
-
     await set(ref(database, `Requests/${id}/Facultystatus`), 'cancelled');
+  };
 
-  }
+  const handleRemark = async (id) => {
+    if (remarkText[id]) {
+      await set(ref(database, `Requests/${id}/facRemark`), remarkText[id]);
+    }
+  };
 
+  const updateRemarkText = (id, text) => {
+    setRemarkText({ ...remarkText, [id]: text });
+  };
 
-  const fetchData = async (tab) => {
-    try {
-
-      const rootRef2 = ref(database, "Clubs");
-      var club = ""
-      onValue(rootRef2, (snapshot) => {
-        const request = snapshot.val();
-        const newData = [];
-        for (const userId in request) {
-          const userData = request[userId];
-          // console.log(userData)
-          if (userData.advisor === user.email) {
-            console.log(userData.name)
-            club = userData.name;
-
-            newData.push(userData);
-          }
-        }
-        // setListData(newData);
-      });
-      // console.log("REach")
+  useEffect(() => {
+    const fetchData = async () => {
       const rootRef = ref(database, "Requests");
       onValue(rootRef, (snapshot) => {
         const requests = snapshot.val();
         const newData = [];
         for (const userId in requests) {
           const userData = requests[userId];
-          if (userData.club === club) {
-
-            if (userData.Facultystatus === tab) {
-              console.log(Object.values(userData))
-              newData.push(userData);
-            }
+          if (userData.Facultystatus === activeTab) {
+            newData.push({ ...userData, id: userId });
           }
         }
-        setData(newData); // Update state with new data
+        setData(newData);
       });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+    };
+
+    fetchData();
+  }, [activeTab, database]);
 
   return (
     <div>
+      <Navbar />
       <TabContainer>
         <TabButton onClick={() => handleTabClick('pending')} active={activeTab === 'pending'}>Pending</TabButton>
         <TabButton onClick={() => handleTabClick('accepted')} active={activeTab === 'accepted'}>Accepted</TabButton>
-        <TabButton onClick={() => handleTabClick('cancelled')} active={activeTab === 'cancelled'}>cancelled</TabButton>
+        <TabButton onClick={() => handleTabClick('cancelled')} active={activeTab === 'cancelled'}>Cancelled</TabButton>
       </TabContainer>
 
       <div className="content">
-        {activeTab === 'pending' && (
-          <div>
-            <h2>Pending Items</h2>
-            <div className="content">
-              {data.map((item, index) => (
-                <div key={index}>
-                  <h2>{item.title}</h2>
-                  <p>Start Time: {item.start_time}</p>
-                  <p>End Time: {item.end_time}</p>
-                  <p>Club: {item.club}</p>
-                  <p>Venue: {item.venue}</p>
-
-                  <button onClick={() => handleApproval(item.id)}>Approve</button>
-                  <button onClick={() => handleCancel(item.id)}>Cancel</button>
-
-                  {/* Render other item details if needed */}
-                </div>
-              ))}
-            </div>
-
-            {/* Render pending items */}
+        {data.map((item, index) => (
+          <div key={index}>
+            <h2>{item.title}</h2>
+            <p>Start Time: {item.start_time}</p>
+            <p>End Time: {item.end_time}</p>
+            <p>Club: {item.club}</p>
+            <p>Venue: {item.venue}</p>
+            {activeTab === 'pending' && (
+              <>
+                <button onClick={() => handleApproval(item.id)}>Approve</button>
+                <button onClick={() => handleCancel(item.id)}>Cancel</button>
+                <input type="text" placeholder="Add a remark" value={remarkText[item.id] || ''} onChange={(e) => updateRemarkText(item.id, e.target.value)} />
+                <button onClick={() => handleRemark(item.id)}>Add Remark</button>
+              </>
+            )}
           </div>
-        )}
-        {activeTab === 'accepted' && (
-          <div>
-            <h2>Accepted Items</h2>
-            {/* Render accepted items */}
-            <div className="content">
-              {data.map((item, index) => (
-                <div key={index}>
-                  <h2>{item.title}</h2>
-                  <p>Start Time: {item.start_time}</p>
-                  <p>End Time: {item.end_time}</p>
-                  <p>Club: {item.club}</p>
-                  <p>Venue: {item.venue}</p>
-
-                  {/* Render other item details if needed */}
-                  {/* <button onClick={() => handleApproval(item.key())}>Approve{item.key()}</button> */}
-                </div>
-              ))}
-            </div>
-
-
-          </div>
-        )}
-        {activeTab === 'cancelled' && (
-          <div>
-            <h2>cancelled Items</h2>
-            <div className="content">
-              {data.map((item, index) => (
-                <div key={index}>
-                  <h2>{item.title}</h2>
-                  <p>Start Time: {item.start_time}</p>
-                  <p>End Time: {item.end_time}</p>
-                  <p>Club: {item.club}</p>
-                  <p>Venue: {item.venue}</p>
-
-                  {/* Render other item details if needed */}
-                </div>
-              ))}
-            </div>
-
-            {/* Render cancelled items */}
-          </div>
-        )}
+        ))}
       </div>
     </div>
   );
