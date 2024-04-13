@@ -18,52 +18,53 @@ function ActForm() {
     const [requirements, setrequirements] = useState('');
     const auth = getAuth();
     const [user] = useAuthState(auth);
-    const createChannel = (
-      clubEmail,
-      facultyAdvisorEmail,
-      venueInchargeEmail
-    ) => {
-      try {
-        console.log("Creating channel now inside enters");
-        console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
-        const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
-        const channelKey = temp.replace(/[.@_]/g, '');
-        console.log("new keyyyy "+ channelKey)
-        // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
-        const database = getDatabase(app);
-        console.log("kahskfj Channels/" + channelKey);
-        const channelRef = ref(database, `Channels/${channelKey}`);
-        console.log("Channel ref:", channelRef);
-        console.log("Channel key:", channelKey);
+    const[club,setClub]=useState('')
+    // const createChannel = (
+    //   clubEmail,
+    //   facultyAdvisorEmail,
+    //   venueInchargeEmail
+    // ) => {
+    //   try {
+    //     console.log("Creating channel now inside enters");
+    //     console.log(`${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`);
+    //     const temp = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+    //     const channelKey = temp.replace(/[.@_]/g, '');
+    //     console.log("new keyyyy "+ channelKey)
+    //     // const channelKey = `${clubEmail}_${facultyAdvisorEmail}_${venueInchargeEmail}`;
+    //     const database = getDatabase(app);
+    //     console.log("kahskfj Channels/" + channelKey);
+    //     const channelRef = ref(database, `Channels/${channelKey}`);
+    //     console.log("Channel ref:", channelRef);
+    //     console.log("Channel key:", channelKey);
   
-        set(channelRef, {
-          clubEmail,
-          facultyAdvisorEmail,
-          venueInchargeEmail,
-          // members: {
-          //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
-          //   [venueInchargeEmail]: true, // Set venue incharge as a member
-          // },
-        })
-          .then(() => {
-            console.log("Channel created successfully.");
-          })
-          .catch((error) => {
-            console.error("Error creating channel:", error);
-          });
-      } catch (error) {
-        console.error("Error creating channel:", error);
-      }
-    };
+    //     set(channelRef, {
+    //       clubEmail,
+    //       facultyAdvisorEmail,
+    //       venueInchargeEmail,
+    //       // members: {
+    //       //   [facultyAdvisorEmail]: true, // Set faculty advisor as a member
+    //       //   [venueInchargeEmail]: true, // Set venue incharge as a member
+    //       // },
+    //     })
+    //       .then(() => {
+    //         console.log("Channel created successfully.");
+    //       })
+    //       .catch((error) => {
+    //         console.error("Error creating channel:", error);
+    //       });
+    //   } catch (error) {
+    //     console.error("Error creating channel:", error);
+    //   }
+    // };
     const handle_req_submit = () => {
         try {
-        console.log(date);
-        console.log(start_time);
+        // console.log(date);
+        // console.log(start_time);
 
         var idd = date+start_time+end_time;
         const database = getDatabase(app); 
         const rootRef = ref(database, "Clubs");
-        var club=""
+        // var club=""
         onValue(rootRef, (snapshot) => {
           const request = snapshot.val();
           const newData = [];
@@ -71,9 +72,9 @@ function ActForm() {
             const userData = request[userId];
             // console.log(userData)
             if (userData.email === user.email) {
-              console.log(userData.name)
-              club=userData.name;
-
+              // console.log(userData.name)
+              setClub(userData.name);
+              // console.log(club)
               newData.push(userData);
             }
           }
@@ -101,12 +102,10 @@ function ActForm() {
                 inchargeRemark:'',
                 club:club,
                 id:idd
-
-
             });
       toast.success("Request Sent Successfully");
-      console.log("Creating channel now entering");
-      createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
+      // console.log("Creating channel now entering");
+      // createChannel(clubEmail, facultyAdvisorEmail, venueInchargeEmail);
     } catch (e) {
       console.error(e);
     }
