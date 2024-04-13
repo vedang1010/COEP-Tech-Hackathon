@@ -1,4 +1,5 @@
 'use client'
+import dynamic from "next/dynamic"
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
@@ -126,4 +127,5 @@ const ErrorText = styled.p`
   margin-bottom: 0.5rem;
 `;
 
-export default SignIn;
+// export default SignIn;
+export default dynamic(()=>Promise.resolve(SignIn),{ssr:false});
