@@ -11,15 +11,14 @@ const Navbar = () => {
   const position = Cookies.get("position") || null;
   console.log(position)
   const router = useRouter();
-  
+
   const [displayReq, setDisplayReq] = useState(true); // Boolean state variable
   const auth = getAuth();
   const [user] = useAuthState(auth);
-  if(!user)
-  {
+  if (!user) {
     router.push("/sign-in")
   }
-    const handlePageChange = () => {
+  const handlePageChange = () => {
     router.push("/venuelist");
   };
   const handleDisplayChange = () => {
@@ -49,18 +48,18 @@ const Navbar = () => {
 
   return (
     <NavbarContainer>
-        
+
       <VenueListButton >Welcome {user.email}</VenueListButton>
       <VenueListButton onClick={handleHomeChange}>Home</VenueListButton>
 
-{/* 
+      {/* 
       <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
       <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
       <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton> */}
 
 
       {
-         typeof window !== 'undefined' &&
+        typeof window !== 'undefined' &&
         (position === "Venue In Charge" ? (
           <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
         ) : position === "Faculty Advisor" ? (
@@ -69,7 +68,7 @@ const Navbar = () => {
           <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
         ))
       }
-      
+
       <VenueListButton onClick={handlePageChange}>Venue</VenueListButton>
       <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
     </NavbarContainer>

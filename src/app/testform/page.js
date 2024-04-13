@@ -29,7 +29,7 @@ function ActForm() {
     const [requirements, setrequirements] = useState('');
     const auth = getAuth();
     const [user] = useAuthState(auth);
-    const[club,setClub]=useState('')
+    // const[club,setClub]=useState('')
     // const createChannel = (
     //   clubEmail,
     //   facultyAdvisorEmail,
@@ -75,7 +75,7 @@ function ActForm() {
         // var idd = date+start_time+end_time;
         const database = getDatabase(app); 
         const rootRef = ref(database, "Clubs");
-        // var club=""
+        var club=""
         onValue(rootRef, (snapshot) => {
           const request = snapshot.val();
           const newData = [];
@@ -85,14 +85,14 @@ function ActForm() {
             if (userData.email === user.email) {
               console.log(userData.name)
               club=userData.name;
-              setClub(userData.name);
+              // setClub(userData.name);
 
               console.log("clubbb name iss")
               console.log(club);
 
               newData.push(userData); 
               // console.log(userData.name)
-              setClub(userData.name);
+              // setClub(userData.name);
               // console.log(club)
             }
           }
