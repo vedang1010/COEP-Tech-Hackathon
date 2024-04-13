@@ -69,7 +69,7 @@ const Navbar = () => {
           <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
         ))
       }
-      }
+      
       <VenueListButton onClick={handlePageChange}>Venue</VenueListButton>
       <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
     </NavbarContainer>
