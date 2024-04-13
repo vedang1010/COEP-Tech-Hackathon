@@ -73,9 +73,11 @@ const Navbar = () => {
         ) : position === "Faculty Advisor" ? (
           <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
         ) : position==="Club Member"?(
+          <>
+
           <VenueListButton onClick={handleClubChange}>View</VenueListButton>
-        ):position=="Club Member"?(
           <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
+          </>
         ):<></>)
       }
 
