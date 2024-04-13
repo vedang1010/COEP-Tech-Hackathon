@@ -17,11 +17,9 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     try {
-
-      const res = await 
-      signInWithEmailAndPassword(email, password);
-      const uid = res.user.uid; // Get the UID of the signed-in user
- 
+      const res = await signInWithEmailAndPassword(email, password);
+      const uid = res.user.uid;
+      console.log('UID:', uid);
 
       const userRef = ref(getDatabase(), `Users/${uid}`);
       onValue(userRef, (snapshot) => {
