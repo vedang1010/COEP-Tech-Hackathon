@@ -43,15 +43,11 @@ const GlobalStyle = createGlobalStyle`
   /* Set color of arrows for navigation to black */
   .react-calendar__navigation button {
     color: black;
-    font-size:30px;
-    font-weight: 600;
   }
 
   /* Set color of month and year to black */
   .react-calendar__navigation__label__labelText {
     color: black;
-    font-size: 40px;
-    font-weight: 600;
   }
 
   /* Set overall calendar container to be responsive */
@@ -188,9 +184,6 @@ const CalendarGfg = () => {
                   <p>Event Start Time: {item.start_time}</p>
                   <p>Event End Time: {item.end_time}</p>
                   <p>Event Club: {item.club}</p>
-                  <p>Event remarks by both: {item.facRemark} {item.inchargeRemark}</p>
-                  <p>Event Status by fac: {item.Facultystatus}</p>
-                  <p>Event Status by incharge: {item.status}</p>
                   {/* Add more properties as needed */}
                 </ListItem>
               ))}
