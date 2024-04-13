@@ -147,4 +147,4 @@ const Remarks = ({ currentUser, club }) => {
   );
 };
 
-export default Remarks;
+// export default Remarks;

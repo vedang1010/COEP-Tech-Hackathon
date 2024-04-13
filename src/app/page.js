@@ -72,6 +72,7 @@ Home.getInitialProps = async () => {
   try {
     const auth = getAuth();
     const [user] = useAuthState(auth);
+    console.log(user)
     return { user };
   } catch (error) {
     console.error("Error fetching user data:", error);

@@ -13,6 +13,7 @@ const GlobalStyle = createGlobalStyle`
   .CalendarGfg {
     background-color: black;
     margin-bottom: 12rem;
+
   }
 
   /* Set date color to white */
@@ -22,14 +23,14 @@ const GlobalStyle = createGlobalStyle`
 
   /* Set color of today's date to green */
   .react-calendar__tile--now {
-    background-color: green;
+    background-color: #078C03;
     color: black;
     border-radius:15px; 
   }
 
   /* Set color of selected date to blue */
   .react-calendar__tile--active {
-    background-color: blue;
+    background-color: #90e0ef;
     color: black;
     border-radius:15px;
   }
@@ -68,6 +69,11 @@ const GlobalStyle = createGlobalStyle`
     align-items: flex-start;
     gap: 10px;
     width: 100%;
+    background-color:#e3f2fd;
+    // opacity:0.2;
+    color:black;
+    margin-top:3rem;
+    
   }
 
   .ListItem {
@@ -97,15 +103,21 @@ const StyledCalendar = styled(Calendar)`
   margin-left:9%;
   margin-right:9%;
   border-radius:20px;
+  padding:3rem;
   /* Additional styles if needed */
 `;
 
 const ListContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 7rem;
+  width:45%;
+  // align-items:center;
+  align-text:center;
+  border: 1px solid white 0.5;
 `;
 
 const ListItem = styled.div`
   margin-top: 15px;
+  padding-left:3rem;
 `;
 const CalendarGfg = () => {
   const [value, onChange] = useState(new Date());
@@ -154,6 +166,7 @@ const CalendarGfg = () => {
     setListData(listData)
   };
 
+
   return (
     <>
       <GlobalStyle />
@@ -163,22 +176,27 @@ const CalendarGfg = () => {
         {selectedDate && (
           <ListContainer>
             <h2>Events for {selectedDate}</h2>
-            {listData.map((item, index) => (
-              <ListItem key={index}>
-                <p>Event Venue: {item.venue}</p>
-                <p>Event Name: {item.title}</p>
-                <p>Event Start Time: {item.start_time}</p>
-                <p>Event End Time: {item.end_time}</p>
-                <p>Event Club: {item.end_time}</p>
-                {/* Add more properties as needed */}
-              </ListItem>
-            ))}
+            <ScrollableContainer className="ListContainer">
+              {listData.map((item, index) => (
+                <ListItem key={index}>
+                  <p>Event Venue: {item.venue}</p>
+                  <p>Event Name: {item.title}</p>
+                  <p>Event Start Time: {item.start_time}</p>
+                  <p>Event End Time: {item.end_time}</p>
+                  <p>Event Club: {item.club}</p>
+                  {/* Add more properties as needed */}
+                </ListItem>
+              ))}
+            </ScrollableContainer>
           </ListContainer>
-
         )}
       </CalendarContainer>
     </>
   );
 };
-
+const ScrollableContainer = styled.div`
+  width: 100%;
+  max-height: 300px; /* Limiting the height of the scrollable container */
+  overflow-y: auto; /* Enable vertical scrollbar when content exceeds container height */
+`;
 export default CalendarGfg;

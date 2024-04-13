@@ -6,7 +6,7 @@ import Layout from '../../../components/Layout'
 import Form from '../../../components/Form/page'
 import ActForm from '../testform/page';
 import { getDatabase, ref, onValue } from "firebase/database";
-import Remarks from '../remark/remark';
+// import Remarks from '../remark/remark';
 import CalendarGfg from '../calender/page';
 import Navbar from '../../../components/Navbar';
 const home = () => {
