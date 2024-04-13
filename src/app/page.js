@@ -1,5 +1,5 @@
 'use client'
-
+import dynamic from "next/dynamic"
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/config/config";
@@ -80,4 +80,5 @@ Home.getInitialProps = async () => {
   }
 }
 
-export default Home;
+
+export default dynamic(()=>Promise.resolve(Home),{ssr:false});

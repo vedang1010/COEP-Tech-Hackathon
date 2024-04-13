@@ -1,49 +1,27 @@
 "use client";
 // import React from 'react'
-<<<<<<< HEAD
-import { useState,useEffect } from "react";
-=======
-import { useEffect, useState } from "react";
->>>>>>> 3d11bc2002b62904af9c7e0ec1eca7c4b485f9b4
+import { useState, useEffect } from "react";
 import { styled } from "styled-components";
 // import BookingList from "./VenueList"
 import Cookies from "js-cookie";
-import {} from '../src/app/config/config'
+import {} from "../src/app/config/config";
 import { useRouter } from "next/navigation";
 import { getAuth, signOut } from "firebase/auth";
-<<<<<<< HEAD
-import dynamic from 'next/dynamic'
-
-const Navbar = ({ user }) => {
-
-  const router = useRouter();
-  useEffect(() => {
-    const userSession = sessionStorage.getItem("user");
-    if (!user && !userSession) {
-      router.push("/sign-in");
-    }
-  }, [user, router]);
-
-  const position = Cookies.get("position") || null;
-  console.log(position)
-  // const router = useRouter();
-=======
 import { useAuthState } from "react-firebase-hooks/auth";
 const Navbar = () => {
   const auth = getAuth();
   const [user] = useAuthState(auth);
   const router = useRouter();
   // useEffect(() => {
-  // 
-    // if (!user) {
-    //   router.push("/sign-in")
-    //   return <div>Please sign in to continue</div>;
-    // }
+  //
+  // if (!user) {
+  //   router.push("/sign-in")
+  //   return <div>Please sign in to continue</div>;
+  // }
   // })
   const position = Cookies.get("position") || null;
-  console.log(position)
+  console.log(position);
 
->>>>>>> 3d11bc2002b62904af9c7e0ec1eca7c4b485f9b4
   const [displayReq, setDisplayReq] = useState(true); // Boolean state variable
 
   const handlePageChange = () => {
@@ -64,6 +42,9 @@ const Navbar = () => {
   const handleClubChange = () => {
     router.push("/clubs");
   };
+  const handleReport = () => {
+    router.push("/report");
+  };
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -79,47 +60,32 @@ const Navbar = () => {
 
   return (
     <NavbarContainer>
-
       {/* <VenueListButton >Welcome {user.email}</VenueListButton> */}
       <VenueListButton onClick={handleHomeChange}>Home</VenueListButton>
 
-<<<<<<< HEAD
-
-      {/* <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
-      <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
-      <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
- */}
-
-      {
-         typeof window !== 'undefined' &&
-=======
-      {/* 
-      <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
-      <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
-      <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton> */}
-
-
-      {
-        typeof window !== 'undefined' &&
->>>>>>> 3d11bc2002b62904af9c7e0ec1eca7c4b485f9b4
+      {typeof window !== "undefined" &&
         (position === "Venue In Charge" ? (
-          <VenueListButton onClick={handleDisplayIncharge}>Approve Locations</VenueListButton>
-        ) : position === "Faculty Advisor" ? (
-          <VenueListButton onClick={handleDisplayFaculty}>Approve Requests</VenueListButton>
-        ) : position==="Club Member"?(
           <>
-
-          <VenueListButton onClick={handleClubChange}>View</VenueListButton>
-          <VenueListButton onClick={handleDisplayChange}>Request</VenueListButton>
-<<<<<<< HEAD
-        ))
-      }
-=======
+            <VenueListButton onClick={handleDisplayIncharge}>
+              Approve Locations
+            </VenueListButton>
+            <VenueListButton onClick={handleReport}>Report</VenueListButton>
           </>
-        ):<></>)
-      }
+        ) : position === "Faculty Advisor" ? (
+          <VenueListButton onClick={handleDisplayFaculty}>
+            Approve Requests
+          </VenueListButton>
+        ) : position === "Club Member" ? (
+          <>
+            <VenueListButton onClick={handleClubChange}>View</VenueListButton>
+            <VenueListButton onClick={handleDisplayChange}>
+              Request
+            </VenueListButton>
+          </>
+        ) : (
+          <></>
+        ))}
 
->>>>>>> 3d11bc2002b62904af9c7e0ec1eca7c4b485f9b4
       <VenueListButton onClick={handlePageChange}>Venue</VenueListButton>
       <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
     </NavbarContainer>
@@ -139,12 +105,12 @@ const VenueListButton = styled.button`
 
   &:hover {
     color: #000; /* Change text color to red on hover */
-}
+  }
 `;
 const NavbarContainer = styled.div`
   width: 100vw;
   height: 10vh;
-  background-color: #B11000;
+  background-color: #b11000;
   display: flex;
   justify-content: flex-end;
   /* justify-content: center; */
@@ -153,7 +119,7 @@ const NavbarContainer = styled.div`
 `;
 const LogoutButton = styled.button`
   padding: 1em 2em;
-  background-color: #B11000;
+  background-color: #b11000;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -166,5 +132,5 @@ const LogoutButton = styled.button`
     background-color: #ff7875;
   }
 `;
-// export default Navbar;
-export default dynamic(()=>Promise.resolve(Navbar),{ssr:false});
+export default Navbar;
+// export default dynamic(()=>Promise.resolve(Navbar),{ssr:false});
