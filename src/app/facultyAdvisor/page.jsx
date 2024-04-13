@@ -5,8 +5,6 @@ import app from "../config/config"
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import Navbar from '../../../components/Navbar'
 
-import { getAuth } from 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -24,17 +22,56 @@ const TabButton = styled.button`
   font-size:20px;
 `;
 
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+`;
+
+const Card = styled.div`
+  width: 300px;
+  margin: 20px;
+  padding: 20px;
+  color: black;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 8px 10px magenta;
+`;
+
+const Title = styled.h2`
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+`;
+
+const Field = styled.p`
+  margin: 5px 0;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: ${props => props.bgColor};
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+const TextArea = styled.textarea`
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
 const IndexPage = () => {
   const [activeTab, setActiveTab] = useState('pending'); // Default tab
   const [data, setData] = useState([]);
   const [remarkText, setRemarkText] = useState({});
   const database = getDatabase(app);
-  const auth = getAuth();
-  const [user] = useAuthState(auth);
-  
-  // useEffect(() => {
-  //   fetchData();
-  // }, [activeTab]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -60,18 +97,22 @@ const IndexPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const rootRef = ref(database, "Requests");
-      onValue(rootRef, (snapshot) => {
-        const requests = snapshot.val();
-        const newData = [];
-        for (const userId in requests) {
-          const userData = requests[userId];
-          if (userData.Facultystatus === activeTab) {
-            newData.push({ ...userData, id: userId });
+      try {
+        const rootRef = ref(database, "Requests");
+        onValue(rootRef, (snapshot) => {
+          const requests = snapshot.val();
+          const newData = [];
+          for (const userId in requests) {
+            const userData = requests[userId];
+            if (userData.Facultystatus === activeTab) {
+              newData.push({ ...userData, id: userId });
+            }
           }
-        }
-        setData(newData);
-      });
+          setData(newData);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
 
     fetchData();
@@ -86,25 +127,25 @@ const IndexPage = () => {
         <TabButton onClick={() => handleTabClick('cancelled')} active={activeTab === 'cancelled'}>Cancelled</TabButton>
       </TabContainer>
 
-      <div className="content">
+      <Container>
         {data.map((item, index) => (
-          <div key={index}>
-            <h2>{item.title}</h2>
-            <p>Start Time: {item.start_time}</p>
-            <p>End Time: {item.end_time}</p>
-            <p>Club: {item.club}</p>
-            <p>Venue: {item.venue}</p>
+          <Card key={index}>
+            <Title>{item.title}</Title>
+            <Field>Start Time: {item.start_time}</Field>
+            <Field>End Time: {item.end_time}</Field>
+            <Field>Club: {item.club}</Field>
+            <Field>Venue: {item.venue}</Field>
             {activeTab === 'pending' && (
               <>
-                <button onClick={() => handleApproval(item.id)}>Approve</button>
-                <button onClick={() => handleCancel(item.id)}>Cancel</button>
-                <input type="text" placeholder="Add a remark" value={remarkText[item.id] || ''} onChange={(e) => updateRemarkText(item.id, e.target.value)} />
-                <button onClick={() => handleRemark(item.id)}>Add Remark</button>
+                <Button bgColor="#28a745" onClick={() => handleApproval(item.id)}>Approve</Button>
+                <Button bgColor="#dc3545" onClick={() => handleCancel(item.id)}>Cancel</Button>
+                <TextArea placeholder="Add a remark" value={remarkText[item.id] || ''} onChange={(e) => updateRemarkText(item.id, e.target.value)} />
+                <Button bgColor="#007bff" onClick={() => handleRemark(item.id)}>Add Remark</Button>
               </>
             )}
-          </div>
+          </Card>
         ))}
-      </div>
+      </Container>
     </div>
   );
 };
