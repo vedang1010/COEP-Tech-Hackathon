@@ -84,7 +84,7 @@ function ActForm() {
             // console.log(reference);
             const reference2 = ref(database, "Requests/" + idd);
 
-      console.log(reference2);
+      
 
             set(reference2, {
                 date: date,
@@ -121,7 +121,7 @@ function ActForm() {
             type="date"
             value={date}
             onChange={(e) => setdate(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -130,7 +130,7 @@ function ActForm() {
             type="time"
             value={start_time}
             onChange={(e) => setstart_time(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -139,7 +139,7 @@ function ActForm() {
             type="time"
             value={end_time}
             onChange={(e) => setend_time(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -148,7 +148,7 @@ function ActForm() {
             type="text"
             value={title}
             onChange={(e) => settitle(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -157,7 +157,7 @@ function ActForm() {
             type="text"
             value={reason}
             onChange={(e) => setreason(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <FormGroup>
@@ -165,7 +165,7 @@ function ActForm() {
           <Select
             value={venue}
             onChange={(e) => setvenue(e.target.value)}
-            required
+            
           >
             <option value="">Select Venue</option>
             <option value="Cogni">Cognizant Lab</option>
@@ -180,7 +180,7 @@ function ActForm() {
           <Select
             value={venue}
             onChange={(e) => setaudience(e.target.value)}
-            required
+            
           >
             <option value="">Select Audience</option>
             <option value="College students">College students</option>
@@ -198,7 +198,7 @@ function ActForm() {
             rows="4"
             value={requirements}
             onChange={(e) => setrequirements(e.target.value)}
-            required
+            
           />
         </FormGroup>
         <Button onClick={handle_req_submit} type="submit">
