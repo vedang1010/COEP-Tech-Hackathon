@@ -126,7 +126,7 @@ const OutputWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 4rem auto 1rem 20rem;
+  margin:100px 253px 100px 480px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.3s ease; /* Add transition for smooth effect */
   /* background-color: #F2A379; */

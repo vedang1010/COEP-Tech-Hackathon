@@ -82,7 +82,7 @@ function ActForm() {
           for (const userId in request) {
             const userData = request[userId];
         console.log(user.email)
-            if (userData.advisor === user.email) {
+            if (userData.email === user.email) {
               console.log(userData.name)
               club=userData.name;
               // setClub(userData.name);

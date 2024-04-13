@@ -4,7 +4,8 @@ import styled from "styled-components";
 import app from "../config/config";
 import Navbar from "../../../components/Navbar";
 import { getDatabase, ref, onValue, set } from "firebase/database";
-
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -62,7 +63,7 @@ const TabButton = styled.button`
   padding: 15px 25px;
   margin: 20px 10px;
   background-color: ${(props) => (props.active ? "#023e8a" : "transparent")};
-  color: ${(props) => (props.active ? "white" : "#000")};
+  color: ${(props) => (props.active ? "white" : "#white")};
   border: 1px solid blue;
   border-radius: 5px;
   cursor: pointer;
@@ -74,8 +75,34 @@ const IndexPage = () => {
   const [data, setData] = useState([]);
   const [remarkText, setRemarkText] = useState({});
   const database = getDatabase(app);
-
+  const auth=getAuth()
+  const [user]=useAuthState(auth)
   useEffect(() => {
+    const rootRef2 = ref(database, "Clubs");
+    var club=""
+    onValue(rootRef2, (snapshot) => {
+      const request = snapshot.val();
+      const newData = [];
+      for (const userId in request) {
+        const userData = request[userId];
+        console.log("firebase data is "+userData.advisor)
+        console.log("user is "+user.email)
+        if (userData.advisor === user.email) {
+          console.log(userData.name)
+          club=userData.name;
+          // setClub(userData.name);
+
+          console.log("clubbb name iss")
+          console.log(club);
+
+          newData.push(userData); 
+          // console.log(userData.name)
+          // setClub(userData.name);
+          // console.log(club)
+        }
+      }
+      // setListData(newData);
+    });
     const fetchData = async () => {
       try {
         const rootRef = ref(database, "Requests");
@@ -84,7 +111,7 @@ const IndexPage = () => {
           const newData = [];
           for (const userId in requests) {
             const userData = requests[userId];
-            if (userData.status === activeTab) {
+            if (userData.status === activeTab  && userData.club===club) {
               newData.push({ ...userData, id: userId });
             }
           }
@@ -159,6 +186,27 @@ const IndexPage = () => {
                 >
                   Approve
                 </Button>
+                <Button bgColor="#dc3545" onClick={() => handleCancel(item.id)}>
+                  Cancel
+                </Button>
+                <TextArea
+                  placeholder="Add a remark"
+                  value={remarkText[item.id] || ""}
+                  onChange={(e) => updateRemarkText(item.id, e.target.value)}
+                />
+                <Button bgColor="#007bff" onClick={() => handleRemark(item.id)}>
+                  Add Remark
+                </Button>
+              </>
+            )}
+            {activeTab === "accepted" && (
+              <>
+                {/* <Button
+                  bgColor="#28a745"
+                  onClick={() => handleApproval(item.id)}
+                >
+                  Approve
+                </Button> */}
                 <Button bgColor="#dc3545" onClick={() => handleCancel(item.id)}>
                   Cancel
                 </Button>
