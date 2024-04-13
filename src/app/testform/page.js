@@ -81,12 +81,14 @@ function ActForm() {
           const newData = [];
           for (const userId in request) {
             const userData = request[userId];
-            // console.log(userData)
+        
             if (userData.email === user.email) {
               console.log(userData.name)
               club=userData.name;
+              console.log("clubbb name iss")
+              console.log(club);
 
-              newData.push(userData);
+              newData.push(userData); 
             }
           }
           // setListData(newData);
