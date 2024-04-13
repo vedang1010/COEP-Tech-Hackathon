@@ -1,8 +1,8 @@
-"use client"
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import app from "../config/config"
-import Navbar from '../../../components/Navbar'
+"use client";
+import { useState, useEffect } from "react";
+import styled from "styled-components";
+import app from "../config/config";
+import Navbar from "../../../components/Navbar";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
