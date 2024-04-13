@@ -45,6 +45,7 @@ const auth=getAuth()
         
       <VenueListButton onClick={handleHomeChange}>Home</VenueListButton>
 
+
       {
          typeof window !== 'undefined' &&
         (position === "Venue In Charge" ? (
