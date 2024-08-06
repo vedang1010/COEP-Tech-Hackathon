@@ -41,7 +41,7 @@ const Button = styled.button`
   margin-left: auto; /* Align button to the right */
 `;
 
-const show_all = () => {
+const ShowAll = () => {
   const router = useRouter();
     const [listData, setListData] = useState([]);
     const database = getDatabase(app);
@@ -83,4 +83,4 @@ const show_all = () => {
     )
 }
 
-export default show_all;
+export default ShowAll;
