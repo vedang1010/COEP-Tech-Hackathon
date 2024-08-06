@@ -106,7 +106,7 @@ const Page = () => {
       </Select>
 
       {requests.map((item, index) => (
-        <OutputWrapper>
+        <OutputWrapper key={index}>
           <Output key={index} className="output">
             <h2>Club: {item.club}</h2>
             <p>Title: {item.title}</p>

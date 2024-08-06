@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { ref, set, getDatabase, onValue } from 'firebase/database';
 
 import { get } from 'firebase/database';
+import { data } from 'autoprefixer';
 const Container = styled.div`
   min-height: 100vh;
   display: flex;
@@ -106,17 +107,20 @@ const SignUpPage = () => {
     };
 
     const fetchVenues = async () => {
-      console.log("fetching venues");
+      console.log("fetching venues in funct");
       const database = getDatabase();
+      console.log(database)
       const venuesRef = ref(database, 'Venue'); // Corrected 'Venues' instead of 'Venue'
+      console.log(venuesRef)
     
       onValue(venuesRef, (snapshot) => {
         const venuesData = [];
         snapshot.forEach((childSnapshot) => {
-         
+         console.log(childSnapshot.val())
           venuesData.push(childSnapshot.val());
         });
         setVenues(venuesData);
+        console.log("fetching venues",venuesData);
       });
     };
     

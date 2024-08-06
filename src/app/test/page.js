@@ -7,7 +7,7 @@ const page = () => {
   
   return (
     <>   
-        <Remarks />
+        {/* <Remarks /> */}
     </>
   )
 }
